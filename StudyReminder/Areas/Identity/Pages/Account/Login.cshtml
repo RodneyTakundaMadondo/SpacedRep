@@ -1,0 +1,235 @@
+﻿@page
+@model LoginModel
+
+
+<style>
+    .registration-container {
+        background-color: white;
+        border-radius: 15px;
+        padding: 1rem;
+    }
+
+    input[type="email"],
+    input[type="password"], input[type="text"] {
+        width: 100%;
+        padding: 0.875rem 1rem 0.875rem 3rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-family: inherit;
+        transition: all 0.3s ease;
+        background: #f7fafc;
+    }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+    .btn-register {
+        width: 100%;
+        padding: 1rem;
+        border: none;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        margin-top: 0.5rem;
+    }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+    .input-icon-container {
+        position: relative;
+    }
+
+    .input-icon {
+        position: absolute;
+        top: 55%;
+        left: 1rem;
+    }
+
+    .custom-hr {
+        display: block;
+        text-align: center;
+        position: relative;
+        width: 5rem;
+        margin-inline: auto;
+        color: #e2e8f0;
+    }
+
+        .custom-hr::after {
+            content: "";
+            display: inline-block;
+            height: 1px;
+            background-color: #e2e8f0;
+            width: calc((2*100%) - (2rem));
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateX(100%);
+        }
+
+        .custom-hr::before {
+            content: "";
+            display: inline-block;
+            height: 1px;
+            background-color: #e2e8f0;
+            width: calc((2*100%) - (2rem));
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateX(-100%);
+        }
+
+    .sign-up {
+        color: #667eec;
+        font-weight: 700;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+    }
+
+        .sign-up:hover {
+            text-decoration: underline;
+        }
+        .modal{
+            
+            display:block;
+        }
+        a:hover{
+            color:inherit;
+            cursor:pointer;
+        }
+        .custom-btn{
+        background: #667eec;
+        padding:0.7rem 1rem;
+        color:white;
+        border:none;
+        border-radius:10px;
+        font-weight:600;
+        }
+        .modal-body p>a{
+        color: #667eec;
+        }
+        .p-eye, .lock-icon{
+            position:absolute;
+          
+            top:50%;
+            transform:translateY(-50%);
+        }
+        .p-eye{
+        right: 1rem;
+        }
+        .lock-icon{
+            left:1rem;
+        }
+</style>
+
+@if (Model.EmailNotConfirmed == true)
+{
+    <div class="modal ">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class=" d-flex justify-content-center w-100 fs-1 "><i class="fa-regular fa-circle-xmark text-danger"></i></div>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center">
+                        Your email address is not confirmed. Please check and click the email confirmation link to activate your account. If you did not receive activation email, click the 'send verification email' to request a new email.
+                        <a  asp-page="./ResendEmailConfirmation" class="d-block text-decoration-none fw-bold my-3">Send verification email</a>
+                    </p>
+                </div>
+
+
+                <div class="w-100 d-flex justify-content-center mb-3">
+                    <button type="button" class="custom-btn" data-bs-dismiss="modal">Ok</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+
+<div class="container">
+    <div class="registration-container">
+        <form id="account" method="post">
+            <h2 class="text-center fw-bold fs-4">Welcome Back</h2>
+            <p class="text-center">Sign in to continue your learning journey</p>
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+            <div class="input-icon-container mb-3">
+                <label class="fw-bold" asp-for="Input.Email"></label>
+                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="Enter your email" />
+                <i class="input-icon fa-solid fa-envelope"></i>
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+
+            <div class=" mb-3">
+                <label class="fw-bold" asp-for="Input.Password">Password</label>
+                <div class="input-icon-container">
+                    <input class="password-input" asp-for="Input.Password"  autocomplete="new-password" aria-required="true" placeholder="Enter your password" />
+                    <i class="lock-icon fa-solid fa-lock"></i>
+                    <i class="p-eye fa-regular fa-eye"></i>
+                </div>
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+
+           <div class="d-flex justify-content-between">
+                <div class="checkbox mb-3">
+                    <label asp-for="Input.RememberMe" class="form-label">
+                        <input class="form-check-input" asp-for="Input.RememberMe" />
+                        @Html.DisplayNameFor(m => m.Input.RememberMe)
+                    </label>
+                </div>
+                <a class="sign-up" id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
+           </div>
+            <div>
+                <button id="login-submit" type="submit" class="btn-register">Sign in</button>
+            </div>
+        
+            <div class="my-3 d-flex flex-column gap-3">
+                <span class="custom-hr fs-3">OR</span>
+                <p class="text-center ">Don't have an account? <a class="sign-up" asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Sign up</a></p>
+            </div>
+  
+        </form>
+       
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+@* <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a> *@
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var modalEl = document.querySelector('.modal');
+        if(modalEl){
+            var modal = new bootstrap.Modal(modalEl);
+        modal.show();
+        }
+
+        $(".p-eye").on("click", function () {
+            let attr =$(".password-input").attr("type");
+            if (attr === "password") {
+                $(".password-input").attr("type", "text")
+            } else {
+                $(".password-input").attr("type","password")
+            }
+        })
+    });
+</script>

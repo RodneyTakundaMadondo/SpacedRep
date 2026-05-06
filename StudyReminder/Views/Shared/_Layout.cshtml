@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - StudyReminder</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/StudyReminder.styles.css" asp-append-version="true" />
+    @RenderSection("Styles", required: false)
+    <style>
+        .logo-signin-options{
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding-block:1rem;
+            padding-inline:1rem;
+            border-radius:15px;
+        }
+      @@media(min-width:768px){
+            .image-container {
+                min-width:20rem;
+            }
+      }
+    </style>
+</head>
+<body>
+    <header class="container my-4">
+        <nav class="px-3">
+            <div class="logo-signin-options d-flex flex-column flex-md-row justify-content-md-between align-items-md-center ">
+                <div class="image-container"><img class="d-block img-fluid" src="~/Images/spacedRepDark.svg" alt="SpacedRep" /></div>
+                <partial name="_LoginPartial" />
+            </div>
+            
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://kit.fontawesome.com/6e32b16951.js" crossorigin="anonymous"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

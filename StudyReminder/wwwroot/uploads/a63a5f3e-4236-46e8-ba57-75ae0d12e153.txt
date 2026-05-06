@@ -1,0 +1,8 @@
+let sample = document.querySelectorAll(".sample");
+sample.forEach((s)=>{
+    let radios = s.querySelectorAll("input[type='radio']").forEach((radio)=>{if(!radio.checked)radio.checked =true})
+})
+let sample2 = document.querySelectorAll(".sample2");
+sample2.forEach((s)=>{
+    let radios = s.querySelectorAll("input[type='radio']").forEach((radio)=>{if(!radio.checked)radio.checked =true})
+})

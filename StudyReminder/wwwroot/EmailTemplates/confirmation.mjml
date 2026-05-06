@@ -1,0 +1,88 @@
+<mjml>
+  <mj-body>
+    <mj-section> </mj-section>
+    <mj-section border-radius="10px 10px 0px 0px" background-color="#764ba2">
+      <mj-column>
+        <mj-text
+          align="center"
+          font-weight="bold"
+          font-size="32px"
+          color="white"
+        >
+          Welcome to SpacedRep! 🎉
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <mj-section>
+      <mj-column>
+        <mj-text font-weight="700" font-size="25px">
+          Confirm Your Email Address
+        </mj-text>
+
+        <mj-text> Hi there!👋 </mj-text>
+
+        <mj-text>
+          Thanks for signing up for SpacedRep! We're excited to help you master
+          your<br><br> learning through spaced repetition.
+        </mj-text>
+
+        <mj-text>
+          To get started, please confirm your email address by clicking the
+          button <br><br> below:
+        </mj-text>
+        <mj-button
+          border-radius="5px"
+          background-color="#764ba2"
+          font-weight="600"
+          font-size="16px"
+          href="{{confirmationLink}}"
+          >Confirm Email Address</mj-button
+        >
+
+       
+      </mj-column>
+    </mj-section>
+
+   
+
+    <mj-section>
+      <mj-column><mj-spacer height="5px" /></mj-column>
+    </mj-section>
+
+    <mj-section
+      border-left="5px solid #764ba2"
+      border-radius="10px"
+      background-color="#edf2f7"
+    >
+      <mj-column>
+        <mj-text>
+          ⏰<strong>This link will expire in 24 hours.</strong> If you didn't
+          create an account with SpacedRep, you can safely ignore this email.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <mj-section>
+      <mj-column><mj-spacer height="5px" /></mj-column>
+    </mj-section>
+
+    <mj-section padding="0">
+      <mj-column padding="0"
+        ><mj-divider padding="0" border-color="#cccccc" border-width="1px"
+      /></mj-column>
+    </mj-section>
+
+    <mj-section background-color="#f7fafc">
+      <mj-column>
+        <mj-text align="center"> Happy Learning!<br><br>The SpacedRep Team 
+        <br> <br>
+        SpacedRep - Learn. Review. Master
+        </mj-text>
+       
+
+     
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

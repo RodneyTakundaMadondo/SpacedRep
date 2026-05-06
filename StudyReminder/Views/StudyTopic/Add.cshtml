@@ -1,0 +1,70 @@
+﻿@model StudyTopicAddViewModel
+@section Styles {
+	<link rel="stylesheet" href="~/css/add.css" />
+	<link rel="stylesheet" href="~/lib/quill/quill.snow.css"/>
+}
+<div class=" add-container-wrapper pt-5">
+
+	<div class="container add-container  px-3 py-4">
+		<h1 class="text-center fw-bold fs-3 mb-4"> Add a Study Topic</h1>
+
+		<form class="form" asp-action="Add" asp-controller="StudyTopic" method="post" enctype="multipart/form-data">
+			<div class="d-flex flex-column gap-2">
+				<div class="mb-3 d-flex flex-column">
+					<label  asp-for="@Model.StudyTopic.Title"></label>
+					<input class="topic-title" type="text" asp-for="@Model.StudyTopic.Title" placeholder="Enter topic title" />
+					<span class="text-danger" asp-validation-for="@Model.StudyTopic.Title"></span>
+				</div>
+
+				<div class="mb-3 d-flex flex-column">
+					<label asp-for="@Model.StudyTopic.Description"></label>
+					<div id="editor"></div>
+					<input type="hidden" asp-for="@Model.StudyTopic.Description" id="hiddenContent" />
+					<span class="text-danger" asp-validation-for="@Model.StudyTopic.Description"></span>
+				</div>
+
+				<div class="mb-3 d-flex flex-column gap-2 flex-wrap">
+					<div class="d-flex flex-column gap-2">
+						<label asp-for="@Model.StudyTopic.DateStarted"></label>
+						<input class="topic-startdate" asp-for="@Model.StudyTopic.DateStarted" />
+						<span class="text-danger" asp-validation-for="@Model.StudyTopic.DateStarted"></span>
+					</div>
+					<div class="d-flex flex-column gap-2">
+						<label asp-for="@Model.StudyTopic.DueDate"></label>
+						<input class="topic-enddate" asp-for="@Model.StudyTopic.DueDate" />
+						<span class="text-danger" asp-validation-for="@Model.StudyTopic.DueDate"></span>
+					</div>
+				</div>
+
+				<div class="mb-3 d-flex flex-column">
+					<label for="">Notes:</label>
+					<input type="file" name="Files" multiple accept=".pdf,.docx,.txt" />
+					<span asp-validation-for="StudyTopic.Files" class="text-danger"></span>
+				</div>
+
+				<div class="d-flex flex-column flex-sm-row justify-content-sm-between gap-3">
+					<a class="cancel-btn text-center py-2 d-flex align-items-center justify-content-center" asp-action="Index" asp-controller="Home">Cancel</a>
+					<button class="submit-btn text-white fw-bold">Add Topic</button>
+				</div>
+			</div>
+		</form>
+
+
+
+	</div>
+
+
+
+</div>
+@section Scripts{
+	<script src="~/lib/quill/quill.min.js"></script>
+	<script>
+		const quill = new Quill('#editor', {
+		theme: 'snow'
+		});
+		document.querySelector('.form').addEventListener('submit', function () {
+		document.getElementById('hiddenContent').value = quill.getText();
+		
+		});
+	</script>
+}

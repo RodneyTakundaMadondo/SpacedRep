@@ -1,0 +1,214 @@
+﻿@model StudyTopic
+@section Styles{
+	<link rel="stylesheet" href="~/css/detail.css" />
+}
+@{
+	int completedRevisions= 0;
+	int pendingRevisions = 0;
+	DateTime? upcomingRevision = null;
+
+	if(Model.Revisions is not null)
+	{
+		foreach (var rev in Model.Revisions)
+		{
+			if (rev.ScheduledDate.Date > DateTime.Today.Date)
+			{
+				upcomingRevision = rev.ScheduledDate;
+				break;
+			}
+			
+		}
+
+		foreach (var rev in Model.Revisions)
+		{
+			if (rev.ScheduledDate.Date <= DateTime.Today.Date)
+			{
+				completedRevisions++;
+			}
+			else
+			{
+				pendingRevisions++;
+			}
+		}
+	}
+	double percentageDone = ((double)completedRevisions / 6) * 100;
+	
+}
+
+<div class="container my-4">
+
+	<a class="btn-back text-decoration-none fw-bold text-white" asp-action="Index" asp-controller="Home"><i class="fa-solid fa-arrow-left me-2"></i>Back to Topics</a>
+
+</div>
+
+<div class="card rounded-3 mt-4">
+
+	<div class="card-begin position-relative card-img-top p-4 ">
+		<div class="d-flex flex-wrap justify-content-between text-white mb-3 gap-2 ">	
+			<h1 class="text-white fw-bold">@Model.Title</h1>
+			<span class="d-block rounded-pill completion-info d-flex align-items-center gap-2 fw-bold">
+				<i class="fa-solid fa-circle-check"></i>
+				@completedRevisions/6 Completed
+				</span>
+		</div>
+		<div class="d-flex gap-2 flex-wrap text-white">
+			<span><i class="fa-solid fa-calendar  me-2"></i>Started: @Model.DateStarted.Value.Date.ToString("yyyy/MM/dd")</span>
+			<span><i class="fa-solid fa-clock me-2"></i>Next Review: @(upcomingRevision?.ToString("yyyy/MM/dd") ?? "Completed")</span>
+		</div>
+	</div>
+
+	<div class="card-body">
+		<div class="mb-4">
+			<h3 class="text-capitalize fs-5 fw-bold"><i class="fa-solid fa-circle-info me-2"></i>Description</h3>
+			<p>
+				@Model.Description
+			</p>
+		</div>
+
+		<div class="mb-4">
+			<h3 class="text-capitalize fs-5 fw-bold"><i class="fa-solid fa-arrow-trend-up me-2"></i>Progress Overview</h3>
+			<div>
+				<div class="d-flex flex-column flex-md-row justify-content-md-between gap-md-3 align-items-center mb-3 progress-info rounded-3 py-3 px-md-3">
+					<div><span class="d-block text-center fw-bold fs-3">@completedRevisions</span><span class="supporting-text text-uppercase">Completed</span></div>
+					<div><span class="d-block text-center fw-bold fs-3">@pendingRevisions</span><span class="supporting-text text-uppercase">Remaining</span></div>
+					<div><span class="d-block text-center fw-bold fs-3">@((int)percentageDone)%</span><span class="supporting-text text-uppercase">Progress</span></div>
+				</div>
+				<div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="@percentageDone" aria-valuemin="0" aria-valuemax="100">
+					<div class="progress-bar w-@percentageDone"></div>
+				</div>
+			</div>
+		</div>
+
+		<div>
+			<h3 class="text-capitalize fs-5 fw-bold"><i class="fa-solid fa-clock unique me-2"></i>Revision Timeline</h3>
+			<ul class="revision-schedule-list">
+				@foreach(var rev in Model.Revisions)
+				{
+					<li class="revision-item @(rev.ScheduledDate.Date <= DateTime.Today.Date ? "completed-revision text-success" : "") d-flex justify-content-between align-items-center mb-3 px-2 py-3 rounded-3 ">
+
+						<div class="d-flex align-items-center gap-3">
+							<div class="rounded-circle  success-indicator d-flex align-items-center justify-content-center">
+							@Html.Raw(rev.ScheduledDate.Date <= DateTime.Today
+														? "<i class='fa-solid fa-circle-check fs-1'></i>"
+														: $"<span>{rev.RevisionNumber}</span>")
+								
+							</div>
+
+							<div class="d-flex flex-column">
+								<span class="fw-bold">Revision Day @rev.RevisionNumber</span>
+								<span class="revision-date">@rev.ScheduledDate.Date.ToString("yyyy/MM/dd")</span>
+							</div>
+						</div>
+
+						<span class="d-block text-capitalize rev-status">
+						@(rev.ScheduledDate.Date <= DateTime.Today?"completed":"upcoming")
+						</span>
+					</li>
+				}
+			</ul>
+		</div>
+
+		<div>
+			<h3 class="text-capitalize fs-5 fw-bold"><i class="fa-solid fa-file me-2"></i>Study documents</h3>
+			<div class="d-flex flex-wrap gap-3">
+				@if (Model.Files?.Any() == true)
+				{
+					foreach (var file in Model.Files)
+					{
+						<div class="d-flex align-items-center justify-content-between  pdf-item  ">
+							<div class="d-flex flex-column gap-2">
+								<div class="pdf-icon-container rounded-2"><i class="fa-solid fa-file"></i></div>
+								<a href="@file.FilePath" target="_blank" class="file-info text-decoration-none">
+									<span class="d-block file-name text-black fw-bold ">@file.FileName</span>
+									<span>@file.FileType</span>
+									
+								</a>
+							</div>
+							<div class="d-flex flex-column gap-2">
+								<button data-id="@file.Id"
+										data-name="@file.FileName"
+										data-url="@Url.Action("DeleteDoc", "StudyFile")"
+										onclick="openDeleteModal(this)"
+										type="button" class="doc-delete-btn ">
+									<i class="fa-solid fa-trash"></i>
+								</button>
+								<span class="text-black">@file.FileSize MB</span>
+							</div>
+						</div>
+					}
+				}
+				else
+				{
+					<p>No documents uploaded yet</p>
+				}
+			</div>
+		</div>
+	</div>
+
+	<div class="card-footer">
+		<div class="d-flex flex-column gap-3 flex-md-row ">
+			<a class="edit-btn d-block text-dark text-center rounded-3" asp-action="Edit" asp-route-id="@Model.StudyTopicId" asp-controller="StudyTopic">Edit</a>
+
+			<button class="delete-btn text-center rounded-3"
+					data-id="@Model.StudyTopicId"
+					data-name="@Model.Title"
+					data-url="@Url.Action("Delete", "StudyTopic")"
+					onclick="openDeleteModal(this)">
+				Delete
+			</button>
+
+		</div>
+	</div>
+
+
+</div>
+<div class="modal fade" id="deleteModal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<h5 class="modal-title">Confirm delete</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+
+			<div class="modal-body">
+				<p>
+					Are you sure you want to delete
+					<strong id="deleteItemName"></strong>?
+				</p>
+			</div>
+
+			<div class="modal-footer">
+				<form method="post" id="deleteForm">
+
+					<input type="hidden" name="id" id="deleteItemId" />
+
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+						Cancel
+					</button>
+
+					<button type="submit" class="btn btn-danger">
+						Delete
+					</button>
+				</form>
+			</div>
+
+		</div>
+	</div>
+</div>
+<script>
+
+
+	function openDeleteModal(button) {
+		const id = button.getAttribute("data-id");
+		const name = button.getAttribute("data-name");
+		const url = button.getAttribute("data-url");
+
+		document.getElementById("deleteItemId").value = id;
+		document.getElementById("deleteItemName").textContent = name;
+		document.getElementById("deleteForm").action = url;
+
+		const modal = new bootstrap.Modal(document.getElementById("deleteModal"));
+		modal.show();
+	}
+</script>

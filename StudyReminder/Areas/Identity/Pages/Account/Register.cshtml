@@ -1,0 +1,185 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+<style>
+    .registration-container{
+        background-color:white;
+        border-radius:15px; 
+        padding:1rem;
+    }
+
+    input[type="email"],
+    input[type="password"], input[type="text"] {
+        width: 100%;
+        padding: 0.875rem 1rem 0.875rem 3rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-family: inherit;
+        transition: all 0.3s ease;
+        background: #f7fafc;
+    }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+    .btn-register {
+        width: 100%;
+        padding: 1rem;
+        border: none;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        margin-top: 0.5rem;
+    }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+.input-icon-container {
+    position:relative;
+
+}
+.input-icon{
+    position:absolute;
+    top:55%;
+    left:1rem;
+}
+.privacy, .terms{
+color: #667eea;
+text-decoration:none;
+transition:all 0.3s ease-in-out;    
+}
+.privacy:hover, .terms:hover{
+    text-decoration:underline;
+}
+.custom-hr{
+    display:block;
+    text-align:center;
+    position:relative;
+    width:5rem;
+    margin-inline:auto;
+        color: #e2e8f0;
+}
+.custom-hr::after{
+    content:"";
+    display:inline-block;
+    height:1px;
+            background-color: #e2e8f0;
+    width:calc((2*100%) - (2rem));
+    position:absolute;
+    right:0;
+    top:50%;
+   transform:translateX(100%);
+}
+.custom-hr::before{
+    content:"";
+    display:inline-block;
+    height:1px;
+            background-color: #e2e8f0;
+    width: calc((2*100%) - (2rem));
+    position:absolute;
+    top:50%;
+    left:0;
+   transform:translateX(-100%);
+}
+.sign-in{
+        color: #667eec;
+        font-weight:700;
+        text-decoration:none;
+        cursor:pointer;
+        transition:all 0.3s ease-in-out;
+}
+.sign-in:hover{
+    text-decoration:underline;
+}
+
+    .p-eye, .lock-icon {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .p-eye {
+        right: 1rem;
+    }
+
+    .lock-icon {
+        left: 1rem;
+    }
+</style>
+
+
+<div class="container">
+    <div class="registration-container">
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <h2 class="text-center fw-bold fs-4">Create Account</h2>
+            <p class="text-center">Start your spaced repetition learning journey</p>
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+            <div class="input-icon-container mb-3">
+                <label class="fw-bold" asp-for="Input.Email"></label>
+                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="Enter your email" />
+                <i class="input-icon fa-solid fa-envelope"></i>
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+
+            <div class=" mb-3">
+                <label class="fw-bold" asp-for="Input.Password">Password</label>
+                <div class="input-icon-container">
+                    <input class="password-input" asp-for="Input.Password"  autocomplete="new-password" aria-required="true" placeholder="Create a password" />
+                    <i class="lock-icon fa-solid fa-lock"></i>
+                    <i class="p-eye fa-regular fa-eye"></i>
+                </div>
+               
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+            <div class="input-icon-container mb-3">
+                <label class="fw-bold" asp-for="Input.ConfirmPassword">Confirm Password</label>
+                <input asp-for="Input.ConfirmPassword" autocomplete="new-password" aria-required="true" placeholder="Confirm your password" />
+                <i class="input-icon fa-solid fa-shield"></i>
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+            <button id="registerSubmit" type="submit" class="btn-register">Create Account</button>
+        </form>
+        <div class="my-3 d-flex flex-column gap-3">
+            <p class="text-center">
+                By signing up, you agree to our <a class="terms">Terms of Service</a> and <a class=" privacy">Privacy Policy</a>
+            </p>
+            <span class="custom-hr fs-3">OR</span>
+            <p class="text-center">Already have an account? <a asp-area="Identity" asp-page="/Account/Login" class=" sign-in">Sign in</a></p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        $(".p-eye").on("click", function () {
+            console.log("hello password wtf")
+            let attr = $(".password-input").attr("type");
+            if (attr === "password") {
+                $(".password-input").attr("type", "text")
+            } else {
+                $(".password-input").attr("type", "password")
+            }
+        })
+    })
+      
+
+</script>

@@ -1,0 +1,192 @@
+﻿.card {
+    border-radius: 15px !important;
+}
+
+.card-begin {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px 15px 0 0 !important;
+}
+
+.progress-bar {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+.btn-back {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding-block: 0.5rem;
+    padding-inline: 1rem;
+    border-radius: 10px;
+    transform: translateX(0);
+    transition: all 0.3s ease;
+}
+
+    .btn-back:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateX(-5px);
+    }
+
+.completion-info {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding-inline: 0.8rem;
+    padding-block: 0.5rem;
+}
+
+.fa-circle-info, .fa-arrow-trend-up, .fa-clock.unique {
+    color: #667eea
+}
+
+.progress-info {
+    background-color: #f7fafc;
+}
+
+    .progress-info div > span:first-child {
+        color: #667eea;
+        font-weight: 600;
+    }
+
+.revision-schedule-list {
+    padding-block: 1rem;
+    padding-left: 0;
+}
+
+    .revision-schedule-list li {
+        list-style-type: none;
+        background-color: #f7fafc;
+        transition: all 0.3s ease;
+    }
+
+.success-indicator {
+    width: 2rem;
+    height: 2rem;
+    background-color: #e2e8f0;
+}
+
+.revision-item:hover, .rev-status {
+    background: #edf2f7;
+    transform: translateX(5px);
+}
+
+.revision-item.completed-revision {
+    background-color: #c6f6d5;
+    box-shadow: -3px 0 0 #48bb78;
+}
+
+    .revision-item.completed-revision .rev-status {
+        background: #9ae6b4;
+        color: #22543d;
+    }
+
+.rev-status {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.fa-file {
+    color: #667eea
+}
+
+.document-container h3:first-child {
+    color: #4a5568;
+    font-size: 1rem;
+    font-weight: 500
+}
+
+.pdf-item {
+    background-color: #f7fafc;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    padding-block: 0.5rem;
+    padding-inline: 1rem;
+    border: 2px solid #e2e8f0;
+    transition: all 0.3s ease;
+    width:min(100%,20rem);
+}
+
+    .pdf-item:hover {
+        border-color: #667eea;
+        background-color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+    }
+
+.file-info {
+    font-size: 0.8rem;
+}
+
+.file-name {
+    font-size: 0.9rem;
+}
+
+.pdf-icon-container {
+    background-color: #667eea;
+    padding-inline: 8px;
+    padding-block: 5px;
+    width:3rem;
+    height:3rem;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:1.2rem;
+
+}
+
+    .pdf-icon-container i {
+        color: white;
+        /*    background-color:white;*/
+    }
+
+.doc-delete-btn {
+    border: none;
+    background-color: #fed7d7;
+    color: #c53030;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0;
+}
+
+.pdf-item:hover .doc-delete-btn {
+    opacity: 1;
+}
+
+.doc-delete-btn:hover {
+    background: #fc8181;
+    color: white;
+    transform: scale(1.1);
+}
+
+.edit-btn, .delete-btn {
+/*    width:min(100%,5rem);*/
+/*    min-width: 5rem;*/
+width:100%;
+display:block;
+    padding-block: 0.5rem;
+    transition: background-color 0.3s ease-in-out;
+    text-decoration: none;
+    border: none;
+}
+
+.delete-btn {
+    background-color: #fed7d7;
+    color: #c53030 !important;
+}
+
+    .delete-btn:hover {
+        background-color: #fc8181;
+    }
+
+.edit-btn {
+    background-color: #667eea;
+}
+
+    .edit-btn:hover {
+        background-color: #5568d3;
+        transform: translateY(-2px);
+        transition: all 0.3s ease;
+    }

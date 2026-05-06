@@ -1,0 +1,50 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+<style>
+    .auth-btn{
+        background-color: rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        transition: all 0.3s ease;
+        min-width:5rem; 
+    }
+   .auth-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        #manage{
+            font-size:0.8rem;
+        }
+        @@media(min-width:540px){
+            #manage{
+                font-size:1rem;
+            }
+        }
+</style>
+
+
+@if (SignInManager.IsSignedIn(User))
+{
+
+    <div class="d-flex justify-content-between align-items-center gap-3 flex-wrap">
+                <a id="manage" class="text-white text-decoration-none fw-bold " asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"> @UserManager.GetUserName(User)</a>
+
+                <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <button id="logout" type="submit" class="border-0 auth-btn mx-auto">Logout</button>
+                </form>
+        </div>
+    
+}
+else
+{
+    <div class="d-flex justify-content-between align-items-center gap-3">
+        <a class=" text-white text-decoration-none fw-bold auth-btn" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        <a class=" text-white text-decoration-none fw-bold auth-btn" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+    </div>
+}

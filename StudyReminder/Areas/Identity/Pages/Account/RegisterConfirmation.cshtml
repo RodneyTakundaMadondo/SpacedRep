@@ -1,0 +1,114 @@
+﻿@page
+@model RegisterConfirmationModel
+
+<style>
+    .container.custom-container{
+        background:white;
+    }
+    @@media(min-width:768px){
+        .container.custom-container{
+            max-width:720px;
+        }
+    }
+
+    .envelope-container{
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        width:5rem;
+        height:5rem;
+        animation: pulse 2s ease-in-out infinite;
+    }
+    @@keyframes pulse {
+        0%, 100%{
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4);
+    }
+
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 20px rgba(102, 126, 234, 0);
+    }
+
+    }
+
+    .email-container{
+        max-width:14rem;
+        padding:0.5rem 1rem;
+        margin-inline:auto;
+        background: #f7fafc;
+    }
+    .email-container span{
+        color:#667eea;
+    }
+    .email-help{
+        background:#edf2f7;
+        border-left:4px solid #667eea;
+    }
+    .page-btn{
+        text-decoration:none;
+        padding:0.5rem 1rem;
+        border-radius:15px;
+        display:inline-block;
+        width:100%;
+        text-align:center;
+        
+    }
+    .resend-btn{
+        color:#4a5568;
+        background:#edf2f7;
+        transition:all 0.3s ease;
+    }
+    .resend-btn:hover{
+        background:#e2e8f0;
+    }
+   .custom-container  a:not(.resend-btn){
+        background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    .custom-container a:hover{
+        color:initial;
+    }
+    .custom-container .fa-info{
+        color:white;
+    }
+
+    .info-container{
+        background: #667eea;
+        width:1.5rem;
+        height:1.5rem;
+        padding:0.5rem;
+    }
+</style>
+
+<div class="container custom-container rounded-3 ">
+      <div class="py-4 px-2">
+        <div class="text-center envelope-container d-flex justify-content-center align-items-center mx-auto rounded-circle text-white mb-3">
+            <i class="fa-solid fa-envelope fs-1"></i>
+        </div>
+
+        <h1 class="text-center fw-bold text-capitalize">Please check your email </h1>
+        <div class="email-container text-center rounded-3 d-flex justify-content-center">
+            <span><i class="fa-solid fa-envelope  me-2 d-inline"></i> @Model.Email</span>
+        </div>
+        <p class="text-center">
+            A confirmation email has been sent to <span class="fw-bold">@Model.Email</span>.Please click the link in the email to confirm your email address and complete your registration. 
+        </p>
+
+        <div class="email-help rounded-3 p-3 mb-3">
+            <h3 class="fw-bold fs-6 d-flex align-items-center gap-2">
+                <span class="d-flex justify-content-center align-items-center rounded-circle info-container"><i class="fa-solid fa-info me-2"></i></span>
+                Didn't receive the email?
+            </h3>
+
+            <p>
+                If you do not receive your confirmation email in your inbox within 2 minutes, please check your junkmail/spam box before requesting it to be resent.
+            </p>
+        </div>
+
+         <div class="d-flex flex-column align-items-center gap-3">
+          <a asp-page="./ResendEmailConfirmation" class="page-btn fw-bold resend-btn">Resend Email</a>
+          <a asp-page="./Login"  class="page-btn text-white fw-bold">Back to login</a>
+      </div>
+      </div>
+      
+     
+</div>
+

@@ -1,0 +1,383 @@
+﻿
+@section Styles{
+    <link rel="stylesheet" href="~/css/quiz.css" />
+}
+
+<div class="container my-4">
+
+	<a class="back-button text-decoration-none fw-bold text-white" asp-action="Index" asp-controller="Home"><i class="fa-solid fa-arrow-left me-2"></i>Back to Topics</a>
+
+</div>
+
+<div class="quiz-container">
+
+    <div class="loading-container" id="loadingState">
+        <div class="loading-spinner"></div>
+       <div class="d-flex flex-column align-items-center">
+            <div class="fw-bold loading-text">Preparing Your Quiz</div>
+            <div class="text-center loading-subtext">Generating questions based on your topic...</div>
+       </div>
+    </div>
+
+    <div class="error-container d-none" id="errorState">
+
+        <div class="error-icon">
+            <div>
+                <svg fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                </svg>
+            </div>
+        </div>
+
+        <h2 class="error-title text-center fw-bold">Oops! Something Went Wrong</h2>
+
+        <p class="error-message text-center">
+            We couldn't load your quiz right now. This might be a temporary issue.
+            Please try again in a moment.
+        </p>
+
+        <div class="error-actions d-flex flex-wrap gap-2 justify-content-center gap-3">
+            <a asp-action="TopicQuiz" asp-controller="StudyTopic" class="btn-retry" >Try Again</a>
+            <a  asp-action="Index" asp-controller="Home"  class="btn-back-home text-decoration-none">Back to Home</a>
+        </div>
+    </div>
+
+    <div class=" container main-container d-none  ">
+
+        <div class="quiz-body d-none">
+                <span class=" d-block text-center topic-title">Practiced Jquery</span>
+
+                <div class="mb-5">
+                    <span class="fw-bolder d-inline-block mb-2">Topic Quiz</span>
+                    <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-bar"></div>
+                    </div>
+                </div>
+
+                <div class="question-container">
+                    <span class="my-2 d-inline-block question-number">Question 1</span>
+                    <h1 class="fs-6 fw-semibold question">Which is the largest animal in the world</h1>
+                </div>
+
+                <div class="answer-btn-container d-flex flex-column gap-2 ">
+                    <button class="answer-btn">shark</button>
+                    <button class="answer-btn">blue whale</button>
+                    <button class="answer-btn">elephant</button>
+                    <button class="answer-btn">giraffe</button>
+                </div>
+
+                <div class="my-4">
+                    <button class="next-btn">Next</button>
+                </div>
+        </div>
+
+        <div class="score-main-container d-none">
+            <div class="d-flex  flex-column align-items-center gap-3 mb-3">
+                <div>
+                    <span class=" d-block text-center topic-title mx-auto">Practiced Jquery</span>
+                    <span class="fw-bolder d-inline-block mb-2">Quiz Complete! 🎉</span>
+                </div>
+
+                <div class="score-container bg-danger">
+                    <div class="inner-score-container d-flex flex-column align-items-center justify-content-center">
+                        <span class="fs-1 fw-bold score-count">8/8</span>
+                        <span class="score-label">Perfect Score!</span>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-center score-performance">Outstanding Performance</h2>
+                    <p class="text-center score-subtext">You've mastered this topic. Keep up the excellent work!'</p>
+                </div>
+
+          </div>
+
+          <div class="d-flex flex-column flex-sm-row justify-content-sm-center quiz-details-container gap-4 mb-3">
+
+                <div class="d-flex flex-column align-items-center px-2 py-3">
+                    <span class="fw-bold fs-2 tot-questions">8</span>
+                    <span class="text-uppercase">Questions</span>
+                </div>
+
+                <div class="d-flex flex-column align-items-center px-2 py-3">
+                    <span class="fw-bold fs-2 text-success correct-answers">8</span>
+                    <span class="text-uppercase">correct</span>
+                </div>
+
+                <div class="d-flex flex-column align-items-center px-2 py-3">
+                    <span class="fw-bold fs-2 text-danger incorrect-answers">8</span>
+                    <span class="text-uppercase">incorrect</span>
+                </div>
+
+            </div>
+
+            <div class="d-flex justify-content-between flex-wrap gap-3">
+                <button class="retry-quiz next-btn grad-bg">Retry</button>
+                <a asp-action="TopicQuiz" asp-controller="StudyTopic" class="text-decoration-none btn-new-quiz">New Quiz</a>
+
+            </div>
+
+            <div>
+
+
+            </div>
+
+
+
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded",async ()=>{
+        function TestingQuiz(){
+            let questions = [
+        {
+            question: "What does HTML stand for?",
+            answers: [
+                { text: "HyperText Markup Language", correct: true },
+                { text: "HyperText Machine Language", correct: false },
+                { text: "HighText Markup Language", correct: false },
+                { text: "HyperTransfer Markup Language", correct: false }
+            ]
+        },
+        {
+            question: "Which language is primarily used for styling web pages?",
+            answers: [
+                { text: "JavaScript", correct: false },
+                { text: "CSS", correct: true },
+                { text: "Python", correct: false },
+                { text: "C#", correct: false }
+            ]
+        },
+        {
+            question: "Which keyword is used to declare a variable in JavaScript that cannot be reassigned?",
+            answers: [
+                { text: "let", correct: false },
+                { text: "var", correct: false },
+                { text: "const", correct: true },
+                { text: "static", correct: false }
+            ]
+        },
+        {
+            question: "What does DOM stand for?",
+            answers: [
+                { text: "Document Object Model", correct: true },
+                { text: "Data Object Method", correct: false },
+                { text: "Display Object Management", correct: false },
+                { text: "Digital Ordinance Model", correct: false }
+            ]
+        },
+        {
+            question: "Which HTTP method is used to retrieve data from a server?",
+            answers: [
+                { text: "POST", correct: false },
+                { text: "PUT", correct: false },
+                { text: "GET", correct: true },
+                { text: "DELETE", correct: false }
+            ]
+        },
+        {
+            question: "Which of the following is NOT a JavaScript data type?",
+            answers: [
+                { text: "String", correct: false },
+                { text: "Boolean", correct: false },
+                { text: "Float", correct: true },
+                { text: "Number", correct: false }
+            ]
+        },
+        {
+            question: "What does CSS primarily control?",
+            answers: [
+                { text: "Database structure", correct: false },
+                { text: "Page styling and layout", correct: true },
+                { text: "Server routing", correct: false },
+                { text: "File storage", correct: false }
+            ]
+        },
+        {
+            question: "Which symbol is used for single-line comments in JavaScript?",
+            answers: [
+                { text: "//", correct: true },
+                { text: "/* */", correct: false },
+                { text: "<!-- -->", correct: false },
+                { text: "#", correct: false }
+            ]
+        }
+    ];
+
+        document.getElementById("loadingState").classList.add("d-none");
+                document.querySelector(".main-container").classList.remove("d-none");
+                return questions;
+            }
+
+           async function loadQuizData(){
+                const params = new URLSearchParams(window.location.search);
+             let id  = params.get("fileid");
+            const response = await fetch(`/api/generatequiz/${id}`);
+            
+           if(response.ok){
+               document.getElementById("loadingState").classList.add("d-none");
+            document.querySelector(".quiz-body").classList.remove("d-none");
+            document.querySelector(".main-container").classList.remove("d-none");
+           }else{
+                document.getElementById("loadingState").classList.add("d-none");
+                document.getElementById("errorState").classList.remove("d-none");
+           }
+           let data = await response.json();
+            return data
+           }
+
+
+             let questions = await loadQuizData(); //uncomment after testing
+            // let questions = TestingQuiz();
+
+             let answerContainer = document.querySelector(".answer-btn-container");
+             let currentQuestionIndex = 0;
+             let score = 0;
+
+            function startQuiz() {
+                currentQuestionIndex = 0; //change this back to 0 after testing
+                score = 0;
+                $(".next-btn").addClass("d-none");
+                $(".progress").removeClass("d-none");
+                showQuestion();
+            }
+
+    function showQuestion() {
+        resetState();
+        let currentQuestion = questions[currentQuestionIndex];
+        let questionNo = currentQuestionIndex + 1;
+        $(".question-number").text("Question " + questionNo);
+        $(".question").text(currentQuestion.question);
+           let percentageDone = Math.floor(((currentQuestionIndex + 1) / questions.length) * 100);
+           console.log(percentageDone);
+           $(".progress").attr("aria-valuenow",percentageDone);
+           $(".progress").html(`  <div class="progress-bar" style="width:${percentageDone}%"></div>`)
+
+        currentQuestion.answers.forEach(answer => {
+            let button = document.createElement("button");
+            button.dataset.correct = answer.correct;
+            button.classList.add("answer-btn");
+            button.innerHTML = answer.text;
+            $(".answer-btn-container").append(button);
+            button.addEventListener("click", selectAnswer)
+        });
+
+    }
+    function resetState() {
+        $(".score-main-container").addClass("d-none");
+        $(".quiz-body").removeClass("d-none");
+        $(".next-btn").addClass("d-none");
+        while (answerContainer.firstChild) {
+            answerContainer.removeChild(answerContainer.firstChild);
+        }
+    }
+
+    function selectAnswer(e) {
+        let selectedBtn = e.target;
+
+        if (selectedBtn.dataset.correct === "true") {
+
+            selectedBtn.classList.add("correct")
+            score++;
+        } else {
+            selectedBtn.classList.add("incorrect")
+        }
+
+        Array.from(answerContainer.children).forEach(button => {
+            if (button.dataset.correct === "true") {
+                button.classList.add("correct")
+            }
+            button.disabled = true;
+        })
+        $(".next-btn").removeClass("d-none");
+    }
+
+    function showScore() {
+        resetState();
+        // $(".progress").addClass("d-none");
+        // $(".question-number").text("")
+
+        // $(".question").text(`You scored ${score} out of ${questions.length}`)
+        // $(".next-btn").text("Play Again");
+        $(".next-btn").removeClass("d-none");
+
+        $(".quiz-body").addClass("d-none");
+        $(".score-count").text(`${score}/${questions.length}`);
+
+        $(".score-label").text(GetScoreLabel(score,questions.length));
+        $(".score-performance").text(GetPerformanceMessage(score,questions.length));
+        $(".score-subtext").text(GetSubText(score,questions.length));
+        $(".tot-questions").text(questions.length);
+        $(".correct-answers").text(score);
+        $(".incorrect-answers").text(questions.length - score);
+        $(".score-main-container").removeClass("d-none");
+    }
+
+    function handleNextButton() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions.length) {
+            showQuestion();
+        } else {
+            showScore();
+        }
+    }
+
+    $(".next-btn").on("click", function () {
+        if (currentQuestionIndex < questions.length) {
+            handleNextButton();
+        } else {
+            startQuiz();
+        }
+    })
+    startQuiz();
+
+        function GetScoreLabel(score, totalQuestions) {
+            let percentage = (score / totalQuestions) * 100;
+            if (percentage === 100) {
+                return "Perfect Score";
+            } else if (percentage >= 80) {
+                return "Excellent";
+            } else if (percentage >= 60) {
+                return "Good Effort";
+            } else if (percentage >= 40) {
+                return "Keep Practicing";
+            } else {
+                return "Keep Trying";
+            }
+        }
+        function GetPerformanceMessage(score, totalQuestions) {
+            let percentage = (score / totalQuestions) * 100;
+            if (percentage === 100) {
+                return "Outstanding Performance";
+            } else if (percentage >= 80) {
+                return "Great Job";
+            } else if (percentage >= 60) {
+                return "You're getting There!";
+            } else if (percentage >= 40) {
+                return "Room for improvement";
+            } else {
+                return "Time to Review";
+            }
+        }
+        function GetSubText(score, totalQuestions) {
+            let percentage = (score / totalQuestions) * 100;
+            if (percentage === 100) {
+                return "You've mastered this topic. Keep up the excellent work!";
+            } else if (percentage >= 80) {
+                return "You're doing really well! Just a few more reviews and you'll have this locked in.";
+            } else if (percentage >= 60) {
+                return "Solid progress! Keep reviewing and you'll master this topic soon";
+            } else if (percentage >= 40) {
+                return "Don't worry, learning takes time. Review your materials and try again!";
+            } else {
+                return "This topic needs more attention. Go back to your notes and study the material before retrying."
+            }
+        }
+
+    })
+</script>
