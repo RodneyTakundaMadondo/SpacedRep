@@ -44,7 +44,7 @@ builder.Services.Configure<FormOptions>(options =>
 builder.Services.AddHangfire(config=>config.UsePostgreSqlStorage(c=>c.UseNpgsqlConnection(connectionString)));
 builder.Services.AddHangfireServer();
 
-
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
