@@ -10,7 +10,7 @@ using StudyReminder.Services;
 using StudyReminder.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("SpacedRepAppConnectionString");
+var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING") ??builder.Configuration.GetConnectionString("SpacedRepAppConnectionString");
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<SpacedRepDbContext>(options =>
