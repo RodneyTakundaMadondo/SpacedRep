@@ -1,8 +1,13 @@
-﻿using Microsoft.Extensions.Options;
+﻿using brevo_csharp.Api;
+using brevo_csharp.Client;
+using brevo_csharp.Model;
+using Microsoft.Extensions.Options;
 using StudyReminder.Models;
 using StudyReminder.Settings;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Mail;
+using Task = System.Threading.Tasks.Task;
 
 namespace StudyReminder.Services
 {
@@ -19,17 +24,36 @@ namespace StudyReminder.Services
             _settings = settings;
             _template = template;
         }
+        //var message = new MailMessage(from, to, subject, body);
 
+        //using (var emailClient = new SmtpClient(_settings.Value.Host, _settings.Value.Port))
+        //{
+        //    emailClient.Credentials = new NetworkCredential(_settings.Value.User, _settings.Value.Password);
+        //    await emailClient.SendMailAsync(message);
+        //}
         public async Task SendEmailAsync(string from, string to, string subject, string body)
         {
-            var message = new MailMessage(from, to, subject, body);
+            
+            brevo_csharp.Client.Configuration.Default.ApiKey["api-key"] = System.Environment.GetEnvironmentVariable("BREVO_API_KEY") ;
+            var apiInstance = new TransactionalEmailsApi();
+            var sendSmtpEmail = new SendSmtpEmail(
+                sender: new SendSmtpEmailSender(email: from),
+                to: new List<SendSmtpEmailTo> { new SendSmtpEmailTo(email: to) },
+                subject: subject,
+                htmlContent: body
+                );
 
-            using (var emailClient = new SmtpClient(_settings.Value.Host, _settings.Value.Port))
+            try
             {
-                emailClient.Credentials = new NetworkCredential(_settings.Value.User, _settings.Value.Password);
-                await emailClient.SendMailAsync(message);
+                await apiInstance.SendTransacEmailAsync(sendSmtpEmail);
+            }
+            catch(Exception ex)
+            {
+                Debug.Print("Exception when calling TransactionalEmailsApi.SendTransacEmail: " + ex.Message);
             }
         }
+
+
 
         public async Task SendRevisionReminderEmailAsync(string userEmail, List<StudyTopic> topics) //we are bringing in some study topics here
         {
