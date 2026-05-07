@@ -12,8 +12,8 @@ using StudyReminder.Models;
 namespace StudyReminder.Migrations
 {
     [DbContext(typeof(SpacedRepDbContext))]
-    [Migration("20260507090956_changed the publicid into a string")]
-    partial class changedthepublicidintoastring
+    [Migration("20260507141921_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
