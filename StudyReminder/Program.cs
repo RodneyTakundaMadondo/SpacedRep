@@ -44,6 +44,8 @@ builder.Services.Configure<FormOptions>(options =>
 builder.Services.AddHangfire(config=>config.UsePostgreSqlStorage(c=>c.UseNpgsqlConnection(connectionString)));
 builder.Services.AddHangfireServer();
 
+
+builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 var app = builder.Build();
 

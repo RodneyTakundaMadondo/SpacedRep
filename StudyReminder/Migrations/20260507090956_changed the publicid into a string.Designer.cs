@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using StudyReminder.Models;
@@ -11,9 +12,11 @@ using StudyReminder.Models;
 namespace StudyReminder.Migrations
 {
     [DbContext(typeof(SpacedRepDbContext))]
-    partial class SpacedRepDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260507090956_changed the publicid into a string")]
+    partial class changedthepublicidintoastring
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

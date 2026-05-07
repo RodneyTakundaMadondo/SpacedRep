@@ -1,7 +1,9 @@
-﻿namespace StudyReminder.Services
+﻿using StudyReminder.Models;
+
+namespace StudyReminder.Services
 {
     public interface IGeminiService
     {
-        Task<string> GenerateQuiz(string file);
+        Task<string> GenerateQuiz(StudyFile file, string cloudinaryPath);
     }
 }

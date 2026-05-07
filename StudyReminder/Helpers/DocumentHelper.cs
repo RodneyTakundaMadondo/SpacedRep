@@ -8,10 +8,14 @@ namespace StudyReminder.Helpers
 {
     public static class DocumentHelper
     {
-        public static string GetWordText(string filePath)
+        public static async Task<string> GetWordText(string cloudinaryUrl)
         {
-           
-                using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false))
+            try
+            {
+                using var httpClient = new HttpClient();
+                var stream = await httpClient.GetStreamAsync(cloudinaryUrl);
+
+                using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(stream, false))
                 {
                     StringBuilder sb = new StringBuilder();
                     var body = wordDoc.MainDocumentPart.Document.Body;
@@ -21,7 +25,33 @@ namespace StudyReminder.Helpers
                     }
                     return sb.ToString();
                 }
+            }catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
          
+        }
+        public async static Task<string> GetTextFileText(string cloudinaryUrl)
+        {
+
+            try
+            {
+                using var httpClient = new HttpClient();
+                string text = await httpClient.GetStringAsync(cloudinaryUrl);
+                return text;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+        }
+        public static async Task<byte[]> GetPdfBytes(string cloudinaryUrl)
+        {
+            using var httpClient = new HttpClient();
+            byte[] pdfBytes = await httpClient.GetByteArrayAsync(cloudinaryUrl);
+            return pdfBytes;
+
         }
         public static string GetFileType(string fileName)
         {
@@ -110,15 +140,7 @@ namespace StudyReminder.Helpers
             return type;
         }
 
-        public async static Task<string> GetTextFileText(string filePath)
-        {
-
-            using StreamReader reader = new(filePath);
-           
-            var text = await reader.ReadToEndAsync();
-            return text;
-           
-        }
+    
         
         public static bool IsPdf(IFormFile file)
         {

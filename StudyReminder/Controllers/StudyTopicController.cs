@@ -19,15 +19,17 @@ namespace StudyReminder.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IGeminiService _geminiService;
+        private readonly ICloudinaryService _cloudinaryService;
 
 
-        public StudyTopicController(IStudyTopicRepository studyTopicRepository, IWebHostEnvironment webHostEnvironment, UserManager<IdentityUser> userManager, IStudyFileRepository studyFileRepository, IGeminiService geminiService)
+        public StudyTopicController(IStudyTopicRepository studyTopicRepository, IWebHostEnvironment webHostEnvironment, UserManager<IdentityUser> userManager, IStudyFileRepository studyFileRepository, IGeminiService geminiService, ICloudinaryService cloudinaryService)
         {
             _studyTopicRepository = studyTopicRepository;
             _webHostEnvironment = webHostEnvironment;
             _userManager = userManager;
             _studyFileRepository = studyFileRepository;
             _geminiService = geminiService;
+            _cloudinaryService = cloudinaryService;
         }
         public async Task<IActionResult> TopicQuiz(int fileId)
         {
@@ -47,13 +49,8 @@ namespace StudyReminder.Controllers
             {
                 if(ModelState.IsValid)
                 {
-                    var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
                     studyTopicAddViewModel.StudyTopic.Files = new List<StudyFile>(); //creating a new list to store studyFile objects- Files in studyTopic is an ICollection anyway
-                    if (!Directory.Exists(uploadsFolder))
-                    {
-                        Directory.CreateDirectory(uploadsFolder);
-                    }
-                
+                 
                     var allowedMimeTypes= new Dictionary<string, string>
                     {
                         { "pdf", "application/pdf" },
@@ -88,22 +85,15 @@ namespace StudyReminder.Controllers
                                 return View();
                             }
 
-                            var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                            using (var stream = new FileStream(filePath, FileMode.Create))
-                            {
-                                await file.CopyToAsync(stream);
-                            }
-
+                          
+                            var uploadedFileDetails = await _cloudinaryService.SaveUserNotes(file);
                             studyTopicAddViewModel.StudyTopic.Files.Add(new StudyFile
                             {
                                 FileName = file.FileName,
-                                FilePath = "/uploads/" + uniqueFileName,
+                                FilePath = uploadedFileDetails.Item1,
+                                PublicId =uploadedFileDetails.Item2,
                                 FileSize =Math.Round(file.Length / (1024.0 * 1024.0), 2),
                                 FileType = DocumentHelper.GetFileType(file.FileName)
-
-
                             });
                         }
 
@@ -221,12 +211,9 @@ namespace StudyReminder.Controllers
             {
                 if(ModelState.IsValid)    
                 {
-                    var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
+                    
                     studyTopic.Files = new List<StudyFile>(); //creating a new list to store studyFile objects- Files in studyTopic is an ICollection anyway
-                    if (!Directory.Exists(uploadsFolder))
-                    {
-                        Directory.CreateDirectory(uploadsFolder);
-                    }
+                   
 
                     var allowedMimeTypes = new Dictionary<string, string>
                     {
@@ -258,20 +245,15 @@ namespace StudyReminder.Controllers
                                 ModelState.AddModelError("Files", "This file type is not supported yet. We only support (txt, pdf, docx)");
                                 return View(studyTopic);
                             }
-                       
-                            
-                            var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
-                            using (var stream = new FileStream(filePath, FileMode.Create))
-                            {
-                                await file.CopyToAsync(stream);
-                            }
+
+                            var uploadedFileDetails = await _cloudinaryService.SaveUserNotes(file);
 
                             studyTopic.Files.Add(new StudyFile
                             {
                                 FileName = file.FileName,
-                                FilePath = "/uploads/" + uniqueFileName,
+                                FilePath = uploadedFileDetails.Item1,
+                                PublicId = uploadedFileDetails.Item2,
                                 FileSize = Math.Round(file.Length / (1024.0 * 1024.0), 2),
                                 FileType = DocumentHelper.GetFileType(file.FileName)
                             });

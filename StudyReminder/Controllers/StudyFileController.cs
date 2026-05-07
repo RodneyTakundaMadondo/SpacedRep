@@ -1,15 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StudyReminder.Models.Repositories;
+using StudyReminder.Services;
 
 namespace StudyReminder.Controllers
 {
     public class StudyFileController : Controller
     {
         private readonly IStudyFileRepository _studyFileRepository;
+        private readonly ICloudinaryService _cloudinaryService;
 
-        public StudyFileController(IStudyFileRepository studyFileRepository)
+        public StudyFileController(IStudyFileRepository studyFileRepository, ICloudinaryService cloudinaryService)
         {
             _studyFileRepository = studyFileRepository;
+            _cloudinaryService = cloudinaryService;
         }
 
         [HttpPost]
@@ -25,6 +28,11 @@ namespace StudyReminder.Controllers
                 else
                 {
                     await _studyFileRepository.DeleteFile(id.Value);
+                    var file = await _studyFileRepository.GetStudyFileById(id.Value);
+                    var cloudinaryId = file.PublicId;
+                    //now we need to delete the file from cloudinary
+                    await _cloudinaryService.DeleteUserNote(cloudinaryId);
+                    //surrounding the cloudinary deletion
                     ViewData["FileDeleted"] = "File deleted successfully";
                     return RedirectToAction("Index","Home");
                 }

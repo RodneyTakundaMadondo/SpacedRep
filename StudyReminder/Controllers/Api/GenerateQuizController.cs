@@ -24,9 +24,9 @@ namespace StudyReminder.Controllers.Api
         public async Task<IActionResult> GetQuiz(int fileId)
         {
            
-                var relativePath = await _studyFileRepository.GetFilePath(fileId);
-                var fullPath = Path.Combine(_webHostEnvironment.WebRootPath, relativePath);
-                var quiz = await _geminiService.GenerateQuiz(fullPath);
+                var file = await _studyFileRepository.GetStudyFileById(fileId);
+                var cloudPath =file.FilePath;
+                var quiz = await _geminiService.GenerateQuiz(file,cloudPath);
                 Console.WriteLine(quiz);
                 return Ok(quiz);
             

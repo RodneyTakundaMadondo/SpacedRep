@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using StudyReminder.Models;
@@ -11,9 +12,11 @@ using StudyReminder.Models;
 namespace StudyReminder.Migrations
 {
     [DbContext(typeof(SpacedRepDbContext))]
-    partial class SpacedRepDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260507090555_added cloudid to file poco")]
+    partial class addedcloudidtofilepoco
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -294,9 +297,8 @@ namespace StudyReminder.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("PublicId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("PublicId")
+                        .HasColumnType("integer");
 
                     b.Property<int>("StudyTopicId")
                         .HasColumnType("integer");

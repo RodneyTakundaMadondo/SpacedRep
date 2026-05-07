@@ -51,5 +51,18 @@ namespace StudyReminder.Models.Repositories
             }
 
         }
+
+        public async Task<StudyFile> GetStudyFileById(int id)
+        {
+            var file = await _context.Files.FirstOrDefaultAsync(f=>f.Id == id);
+            if(file != null)
+            {
+                return file;
+            }
+            else
+            {
+                throw new Exception("File could not be found! Please try again later or contact support.");
+            }
+        }
     }
 }
