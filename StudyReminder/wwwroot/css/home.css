@@ -13,11 +13,21 @@
 
 .add-topic-btn {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.add-topic-btn, .sec-add-topic-btn {
     border: none;
     text-decoration: none;
     color: white;
     width: 15rem;
 }
+.sec-add-topic-btn {
+    background: white;
+    color: #667eea;
+}
+    .sec-add-topic-btn:hover {
+        color: #667eea;
+    }
 
 .topic-description {
     color: #718096;
