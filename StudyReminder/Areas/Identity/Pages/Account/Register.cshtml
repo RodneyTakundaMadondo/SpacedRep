@@ -157,7 +157,7 @@ transition:all 0.3s ease-in-out;
         </form>
         <div class="my-3 d-flex flex-column gap-3">
             <p class="text-center">
-                By signing up, you agree to our <a class="terms">Terms of Service</a> and <a class=" privacy">Privacy Policy</a>
+                By signing up, you agree to our <a asp-action="Terms" asp-controller="Terms" class="terms">Terms of Service</a> and <a asp-action="Privacy" asp-controller="Terms" class="privacy">Privacy Policy</a>
             </p>
             <span class="custom-hr fs-3">OR</span>
             <p class="text-center">Already have an account? <a asp-area="Identity" asp-page="/Account/Login" class=" sign-in">Sign in</a></p>
