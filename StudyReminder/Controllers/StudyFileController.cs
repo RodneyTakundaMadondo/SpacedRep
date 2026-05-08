@@ -27,12 +27,14 @@ namespace StudyReminder.Controllers
                 }
                 else
                 {
-                    await _studyFileRepository.DeleteFile(id.Value);
+                   
                     var file = await _studyFileRepository.GetStudyFileById(id.Value);
                     var cloudinaryId = file.PublicId;
                     //now we need to delete the file from cloudinary
                     await _cloudinaryService.DeleteUserNote(cloudinaryId);
-                    //surrounding the cloudinary deletion
+
+                    // delete from our database 
+                    await _studyFileRepository.DeleteFile(id.Value);
                     ViewData["FileDeleted"] = "File deleted successfully";
                     return RedirectToAction("Index","Home");
                 }
