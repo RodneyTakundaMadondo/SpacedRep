@@ -72,7 +72,8 @@ app.UseHangfireDashboard("/hangfire");
 RecurringJob.AddOrUpdate<RevisionReminderService>(
     "send-revision-reminders",
     service => service.SendRevisionReminderAsync(),
-   "* 14 * * *"
+   "0 16 * * *",
+   new RecurringJobOptions { TimeZone = TimeZoneInfo.FindSystemTimeZoneById("South Africa Standard Time")}
     );
 
 app.Run();
