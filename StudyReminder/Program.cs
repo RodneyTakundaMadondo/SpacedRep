@@ -72,7 +72,7 @@ app.UseHangfireDashboard("/hangfire");
 RecurringJob.AddOrUpdate<RevisionReminderService>(
     "send-revision-reminders",
     service => service.SendRevisionReminderAsync(),
-   "* 16 * * *"
+   "* 14 * * *"
     );
 
 app.Run();
