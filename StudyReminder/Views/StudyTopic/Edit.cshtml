@@ -11,7 +11,7 @@
 	<div class="container add-container  px-3 py-4">
 		<h1 class="text-center fw-bold fs-3 mb-4"> Update Study Topic</h1>
 
-		<form asp-action="Edit" asp-controller="StudyTopic" method="post" enctype="multipart/form-data">
+		<form  asp-action="Edit" asp-controller="StudyTopic" method="post" enctype="multipart/form-data">
 			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 			<input type="hidden" asp-for="@Model.StudyTopicId"/>
 			<input type="hidden" asp-for="@Model.OwnerId"/>
@@ -25,7 +25,8 @@
 
 				<div class="mb-3 d-flex flex-column">
 					<label asp-for="@Model.Description"></label>
-					<textarea class="topic-description" asp-for="@Model.Description" rows="5" cols="33" style="resize:none" placeholder="Describe what you'll be studying"></textarea>
+					<div id="editor"></div>
+					<input type="hidden" asp-for="@Model.Description" id="hiddenContent" />
 					<span class="text-danger" asp-validation-for="@Model.Description"></span>
 				</div>
 
@@ -62,4 +63,27 @@
 
 
 </div>
+<script>
+	document.addEventListener("DOMContentLoaded",()=>{
+		const quill = new Quill("#editor", {
+			theme: "snow"
+		});
+		const existingContent = document.querySelector("#hiddenContent").value;
+		
+		if (existingContent) {
+			let delta = JSON.parse(existingContent);
+			
+			if(typeof delta ==="string"){
+				delta = JSON.parse(delta);
+			}
+			quill.setContents(delta);
+		}
+
+			document.querySelector("form")?.addEventListener("submit", () => {
+				document.querySelector("#hiddenContent").value = JSON.stringify(quill.getContents());
+			})
+
+	})
+
+</script>
 

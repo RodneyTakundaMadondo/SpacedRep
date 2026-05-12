@@ -1,7 +1,7 @@
 ﻿@model StudyTopicAddViewModel
 @section Styles {
 	<link rel="stylesheet" href="~/css/add.css" />
-	<link rel="stylesheet" href="~/lib/quill/quill.snow.css"/>
+	
 }
 @{
     ViewData["Title"] = "Add Study Topic";
@@ -60,14 +60,13 @@
 
 </div>
 @section Scripts{
-	<script src="~/lib/quill/quill.min.js"></script>
+	
 	<script>
 		const quill = new Quill('#editor', {
 		theme: 'snow'
 		});
 		document.querySelector('.form').addEventListener('submit', function () {
-		document.getElementById('hiddenContent').value = quill.getText();
-		
+			document.getElementById('hiddenContent').value =JSON.stringify(quill.getContents());
 		});
 	</script>
 }

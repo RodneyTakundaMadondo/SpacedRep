@@ -190,3 +190,7 @@ display:block;
         transform: translateY(-2px);
         transition: all 0.3s ease;
     }
+
+    .ql-toolbar{
+        display:none !important;
+    }

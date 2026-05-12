@@ -2,6 +2,7 @@
 using Google.GenAI.Types;
 using System.IO.Compression;
 using System.Text;
+using System.Text.Json;
 
 
 namespace StudyReminder.Helpers
@@ -30,6 +31,23 @@ namespace StudyReminder.Helpers
                 throw new Exception(ex.Message);
             }
          
+        }
+
+        public static string QuillToPlainText(string quillJson)
+        {
+            var document = JsonDocument.Parse(quillJson);
+            var ops = document.RootElement.GetProperty("ops");
+
+            var sb = new StringBuilder();
+            foreach (var op in ops.EnumerateArray())
+            {
+                if (op.TryGetProperty("insert", out var insert))
+                {
+                    sb.Append(insert.GetString());
+                }
+            }
+
+            return sb.ToString();
         }
         public async static Task<string> GetTextFileText(string cloudinaryUrl)
         {

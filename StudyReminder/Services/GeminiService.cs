@@ -15,7 +15,21 @@ namespace StudyReminder.Services
         {
             _config = config;
         }
-
+        public async Task<string> GenerateQuizz(string quilJson)
+        {
+            var client = new Client(apiKey: System.Environment.GetEnvironmentVariable("GEMINI_API_KEY"));
+            var extractedText = DocumentHelper.QuillToPlainText(quilJson);
+            var devPrompt = "You will be given the extracted text from a plain text file containing study notes.\r\n\r\nYour task is to create a quiz based ONLY on the information in the document.\r\n\r\nSTRICT RULES:\r\n- Use ONLY information explicitly present in the text. Do NOT add outside knowledge.\r\n- Every question must be answerable directly from the text.\r\n- Ignore UI instructions, metadata, timestamps, and irrelevant sentences.\r\n- Generate exactly 10 questions.\r\n- Each question must have 4 answer options.\r\n- Exactly one correct answer per question.\r\n- Incorrect answers must be plausible and related to the topic, but still incorrect based on the text.\r\n- Do NOT repeat questions or concepts.\r\n\r\nOUTPUT FORMAT (STRICT JSON ONLY):\r\n[\r\n  {\r\n    \"question\": \"...\",\r\n    \"answers\": [\r\n      { \"text\": \"...\", \"correct\": true },\r\n      { \"text\": \"...\", \"correct\": false },\r\n      { \"text\": \"...\", \"correct\": false },\r\n      { \"text\": \"...\", \"correct\": false }\r\n    ]\r\n  }\r\n]\r\n\r\nReturn ONLY the JSON array. No explanations, no markdown, no extra text.";
+            var response = await client.Models.GenerateContentAsync(
+                model: "gemini-3-flash-preview",
+                contents: $"Here is the text: {extractedText} \n\n {devPrompt}",
+                config: new GenerateContentConfig
+                {
+                    ResponseMimeType = "application/json"
+                }
+                );
+            return response.Text ?? "[]";
+        }
         public async Task<string> GenerateQuiz(StudyFile file,string cloudinaryPath)
         {
             var client = new Client(apiKey: System.Environment.GetEnvironmentVariable("GEMINI_API_KEY"));//define the client with the API key from secrets manager

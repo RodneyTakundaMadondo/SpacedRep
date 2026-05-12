@@ -61,7 +61,8 @@ else
                 <div data-url="@Url.Action("Details","StudyTopic",new{id=topic.StudyTopicId})" class="topic-card text-decoration-none px-3 py-4 d-flex flex-column justify-content-between h-100">
                     <div class="">
                         <h1 class="topic-title fw-bold fs-5 ">@topic.Title</h1>
-                        <p class="topic-description ">@topic.Description</p>
+                        <input type="hidden" asp-for="@topic.Description" id="hiddenContent"/>
+                        <p class="topic-description"></p> 
                         <div class="d-flex gap-2 align-items-center task-start-container mb-4">
                             <i class="fa-solid fa-calendar"></i>
                             <span class="text-secondary">Started:@topic?.DateStarted.Value.ToString("yyyy/MM/dd")</span> 
@@ -125,13 +126,24 @@ else
                     </div>
 
                     <div class="d-flex justify-content-between">
-                        @if (topic.Files?.Any() == true && topic.Files.Count<2)
+                        @if(topic.Files is not null && topic.Files.Count>=1)
                         {
-                            foreach(var file in topic.Files)
+                             @foreach(var file in topic.Files)
                             {
-                                <a asp-action="TopicQuiz" asp-controller="StudyTopic" asp-route-fileid="@file.Id" class=" text-center rounded-3  text-decoration-none btn-quiz px-2"><i class="fa-solid fa-circle-question me-2"></i>Quiz Me</a>
+                               
+                                <button class="btn-quiz px-2 text-center rounded-3"
+                                    data-fileId="@file.Id"
+                                    data-topicId ="@topic.StudyTopicId"
+                                    onclick="openQuizModal(this)"
+                                ><i class="fa-solid fa-circle-question me-2"></i>Quiz Me</button>
                             }
                         }
+                        else
+                        {
+                            <a asp-action="TopicQuiz" asp-controller="studytopic" asp-route-topicId="@topic.StudyTopicId" class=" text-center rounded-3  text-decoration-none btn-quiz px-2"><i class="fa-solid fa-circle-question me-2"></i>Quiz Me</a>
+                        }
+
+                        
                         <a class="edit-btn text-dark text-center rounded-3" asp-action="Edit" asp-route-id="@topic.StudyTopicId" asp-controller="StudyTopic">Edit</a>
 
                         <button class="delete-btn text-center rounded-3"
@@ -187,6 +199,50 @@ else
         </div>
     </div>
 </div>
+
+@* quiz modal *@
+<div class="modal fade" id="quizModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content rounded-3">
+
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold">Confirm Quiz Source</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <p class="modal-description">
+                    Choose what we make the quiz with:
+                </p>
+            </div>
+
+            <div class="d-flex flex-column gap-2 my-2">
+               
+                <a class="topic-desc-quiz-link option-card text-decoration-none text-black">
+                        <div class="d-flex flex-wrap gap-2">
+                        <div class="modal-icon md-topic"><i class="fa-solid fa-circle-info"></i></div>
+                        <span class="fw-bold">Topic Description based quiz</span>
+                        <span class="recommended rounded-pill">Recommended</span>
+                        </div>
+                    <p class="my-2 modal-description">Generate questions based on your topic description and title. Quick and easy!</p>
+                    </a>
+               
+
+                <a class="file-quiz-link option-card text-decoration-none text-black">
+                    <div class="d-flex flex-wrap gap-2">
+                        <div class="modal-icon md-file"><i class="fa-regular fa-file"></i></div>
+                        <span class="fw-bold">File based quiz</span>
+                    </div>
+                    <p class="my-2 modal-description">
+                        Use your uploaded documents to create detailed, accurate questions from your study materials.
+                    </p>
+                </a>
+              
+            </div>
+
+        </div>
+    </div>
+</div>
 <script>
     
     
@@ -202,17 +258,39 @@ else
         const modal = new bootstrap.Modal(document.getElementById("deleteModal"));
         modal.show();
     }
+    function openQuizModal(button){
+        const topicId = button.getAttribute("data-topicId");
+        const fileId = button.getAttribute("data-fileId");
+
+        let descLink = document.querySelector(".topic-desc-quiz-link");
+        let fileLink = document.querySelector(".file-quiz-link");
+        console.log(topicId);
+        descLink.setAttribute("href", `/StudyTopic/TopicQuiz?topicId=${topicId}`);
+        fileLink.setAttribute("href", `/StudyTopic/TopicQuiz?fileId=${fileId}`);
+
+        const modal = new bootstrap.Modal(document.getElementById("quizModal"));
+        modal.show();
+    }
+   
 </script>
+
+
 @section Scripts{
     <script>
         $(function(){
-                $(".topic-card").on("click",function(e){
-            if(e.target.closest('button, a, input, form'))return;
-            const url = $(this).data("url");
-            if(url){
-                window.location.href = url;
-            }
-        })
+            $(".topic-card").on("click", function (e) {
+                if (e.target.closest('button, a, input, form')) return;
+                const url = $(this).data("url");
+                if (url) {
+                    window.location.href = url;
+                }
+            });
+
+            var existingContent = document.getElementById("hiddenContent").value;
+          
+            const delta = JSON.parse(existingContent);
+            const plainText = delta.ops.map(op => op.insert).join('');
+            document.querySelector('.topic-description').textContent = plainText;
         })
     </script>
 }

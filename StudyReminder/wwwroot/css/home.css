@@ -220,3 +220,49 @@
     max-width:100%;
 
 }
+.option-card {
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: block;
+    width:calc(100% - 2rem);
+    margin-inline:auto;
+}
+.option-card:hover {
+    border-color: #667eea;
+    background: #f7fafc;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+.modal-icon{
+    width:2rem;
+    height:2rem;
+    background-color:pink;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    border-radius:10px;
+    color:white;
+}
+.md-topic {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+.md-file {
+    background: #3c91db;
+}
+.recommended {
+    background-color: #c6f6d5;
+    display:block;
+    padding-inline:0.5rem;
+   
+    
+}
+.btn-close {
+    background-color: #edf2f7;
+}
+.modal-description {
+    color: #718096;
+}

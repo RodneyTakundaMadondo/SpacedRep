@@ -31,7 +31,7 @@ namespace StudyReminder.Controllers
             _geminiService = geminiService;
             _cloudinaryService = cloudinaryService;
         }
-        public async Task<IActionResult> TopicQuiz(int fileId)
+        public async Task<IActionResult> TopicQuiz(int? fileId,int? topicId)
         {
             
             return View();

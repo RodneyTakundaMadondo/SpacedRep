@@ -219,19 +219,40 @@
 
            async function loadQuizData(){
                 const params = new URLSearchParams(window.location.search);
-             let id  = params.get("fileid");
-            const response = await fetch(`/api/generatequiz/${id}`);
-            
-           if(response.ok){
-               document.getElementById("loadingState").classList.add("d-none");
-            document.querySelector(".quiz-body").classList.remove("d-none");
-            document.querySelector(".main-container").classList.remove("d-none");
-           }else{
-                document.getElementById("loadingState").classList.add("d-none");
-                document.getElementById("errorState").classList.remove("d-none");
-           }
-           let data = await response.json();
-            return data
+              
+            let fileId = params.get("fileId");
+            let topicId = params.get("topicId");
+             
+               console.log(params);
+               if (fileId!=null) {
+                const response = await fetch(`/api/generatequiz?fileid=${fileId}`);
+
+                if (response.ok) {
+                    document.getElementById("loadingState").classList.add("d-none");
+                    document.querySelector(".quiz-body").classList.remove("d-none");
+                    document.querySelector(".main-container").classList.remove("d-none");
+                } else {
+                    document.getElementById("loadingState").classList.add("d-none");
+                    document.getElementById("errorState").classList.remove("d-none");
+                }
+                let data = await response.json();
+                return data
+               }
+
+               if (topicId != null) {
+                const response = await fetch(`/api/generatequiz?topicId=${topicId}`);
+
+                if (response.ok) {
+                    document.getElementById("loadingState").classList.add("d-none");
+                    document.querySelector(".quiz-body").classList.remove("d-none");
+                    document.querySelector(".main-container").classList.remove("d-none");
+                } else {
+                    document.getElementById("loadingState").classList.add("d-none");
+                    document.getElementById("errorState").classList.remove("d-none");
+                }
+                let data = await response.json();
+                return data
+               }
            }
 
 
