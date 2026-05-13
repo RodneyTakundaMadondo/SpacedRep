@@ -68,7 +68,8 @@ app.MapRazorPages();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-app.UseHangfireDashboard("/hangfire");
+
+
 RecurringJob.AddOrUpdate<RevisionReminderService>(
     "send-revision-reminders",
     service => service.SendRevisionReminderAsync(),
