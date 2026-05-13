@@ -3,7 +3,7 @@
 	<link rel="stylesheet" href="~/css/add.css" />
 }
 @{
-	ViewData["Title"] = "Edit Study Topic";
+	// ViewData["Title"] = "Edit Study Topic";
 }
 
 <div class=" add-container-wrapper pt-5">
@@ -11,7 +11,7 @@
 	<div class="container add-container  px-3 py-4">
 		<h1 class="text-center fw-bold fs-3 mb-4"> Update Study Topic</h1>
 
-		<form  asp-action="Edit" asp-controller="StudyTopic" method="post" enctype="multipart/form-data">
+		<form class="edit-form"  asp-action="Edit" asp-controller="StudyTopic" method="post" enctype="multipart/form-data">
 			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 			<input type="hidden" asp-for="@Model.StudyTopicId"/>
 			<input type="hidden" asp-for="@Model.OwnerId"/>
@@ -77,10 +77,18 @@
 				delta = JSON.parse(delta);
 			}
 			quill.setContents(delta);
+			document.querySelector("#hiddenContent").value = "";
 		}
 
-			document.querySelector("form")?.addEventListener("submit", () => {
+		document.querySelector(".edit-form").addEventListener("submit", () => {
+			var text = quill.getText().trim();
+			console.log("text: " + text.length)
+			if (text.length === 0) {
+				return;
+			} else {
 				document.querySelector("#hiddenContent").value = JSON.stringify(quill.getContents());
+			}
+				
 			})
 
 	})

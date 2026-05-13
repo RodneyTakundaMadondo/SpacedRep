@@ -1,4 +1,5 @@
 ﻿@model HomeViewModel;
+
 @{
     ViewData["Title"] = "Home";
 }
@@ -61,8 +62,8 @@ else
                 <div data-url="@Url.Action("Details","StudyTopic",new{id=topic.StudyTopicId})" class="topic-card text-decoration-none px-3 py-4 d-flex flex-column justify-content-between h-100">
                     <div class="">
                         <h1 class="topic-title fw-bold fs-5 ">@topic.Title</h1>
-                        <input type="hidden" asp-for="@topic.Description" id="hiddenContent"/>
-                        <p class="topic-description"></p> 
+                        @* <input type="hidden" asp-for="@topic.Description" id="hiddenContent-@topic.StudyTopicId"/> *@
+                        <p class="topic-description">@DocumentHelper.QuillToPlainText(topic.Description)</p> 
                         <div class="d-flex gap-2 align-items-center task-start-container mb-4">
                             <i class="fa-solid fa-calendar"></i>
                             <span class="text-secondary">Started:@topic?.DateStarted.Value.ToString("yyyy/MM/dd")</span> 
@@ -258,6 +259,7 @@ else
         const modal = new bootstrap.Modal(document.getElementById("deleteModal"));
         modal.show();
     }
+
     function openQuizModal(button){
         const topicId = button.getAttribute("data-topicId");
         const fileId = button.getAttribute("data-fileId");
@@ -271,6 +273,8 @@ else
         const modal = new bootstrap.Modal(document.getElementById("quizModal"));
         modal.show();
     }
+
+   
    
 </script>
 
@@ -286,11 +290,7 @@ else
                 }
             });
 
-            var existingContent = document.getElementById("hiddenContent").value;
-          
-            const delta = JSON.parse(existingContent);
-            const plainText = delta.ops.map(op => op.insert).join('');
-            document.querySelector('.topic-description').textContent = plainText;
+            
         })
     </script>
 }

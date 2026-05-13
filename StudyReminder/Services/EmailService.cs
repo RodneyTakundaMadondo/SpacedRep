@@ -14,23 +14,15 @@ namespace StudyReminder.Services
 
     public class EmailService : IEmailService
     {
-        private readonly IConfiguration _config;
-        private readonly IOptions<SmtpSettings> _settings;
+       
         private readonly Services.EmailTemplate _template;
 
-        public EmailService(IConfiguration config, IOptions<SmtpSettings> settings, EmailTemplate template)
+        public EmailService(EmailTemplate template)
         {
-            _config = config;
-            _settings = settings;
+            
             _template = template;
         }
-        //var message = new MailMessage(from, to, subject, body);
-
-        //using (var emailClient = new SmtpClient(_settings.Value.Host, _settings.Value.Port))
-        //{
-        //    emailClient.Credentials = new NetworkCredential(_settings.Value.User, _settings.Value.Password);
-        //    await emailClient.SendMailAsync(message);
-        //}
+     
         public async Task SendEmailAsync(string from, string to, string subject, string body)
         {
             

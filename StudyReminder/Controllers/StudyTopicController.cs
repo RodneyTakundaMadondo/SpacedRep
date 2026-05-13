@@ -293,15 +293,17 @@ namespace StudyReminder.Controllers
 
                 else
                 {
-                    ViewData["ErrorMessage"] = "Error updating please ensure all fields have values";
-                    return View();
+                    ModelState.AddModelError("Description", "Please describe what you studied and try again");
+                   
+                    return View(studyTopic);
                 }
 
 
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", $"Error updating the study topic, please try again! Error:{ex.Message}");
+                ModelState.AddModelError("StudyTopic", $"Error updating the study topic, please try again! Error:{ex.Message}");
+               
             }
             var selectedTopic = await _studyTopicRepository.GetStudyTopicByIdAsync(studyTopic.StudyTopicId);
             return View(selectedTopic);
