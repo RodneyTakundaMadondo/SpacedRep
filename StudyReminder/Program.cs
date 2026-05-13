@@ -68,9 +68,8 @@ app.MapRazorPages();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
-
-RecurringJob.AddOrUpdate<RevisionReminderService>(
+var recurringJobManager = app.Services.GetRequiredService<IRecurringJobManager>();
+recurringJobManager.AddOrUpdate<RevisionReminderService>(
     "send-revision-reminders",
     service => service.SendRevisionReminderAsync(),
    Cron.Daily(16),
