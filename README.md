@@ -126,8 +126,3 @@ dotnet run
 
 **Why weighted intervals for revision scheduling?** Rigid fixed intervals don't account for how much time a user actually has before an exam. A weighted distribution scales the revision schedule dynamically to whatever preparation window is available.
 
----
-
-## License
-
-MIT
