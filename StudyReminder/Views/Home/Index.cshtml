@@ -9,6 +9,19 @@
 }
 
 
+    @if (TempData.Peek("Success") is not null)
+    {
+    <span class="user-awareness d-block bg-success text-white fw-bold text-center ">
+        @TempData["Success"]
+    </span>
+    }else if (TempData.Peek("ErrorMessage") is not null)
+    {
+    <span class="user-awareness d-block bg-success text-white fw-bold text-center ">
+        @TempData["ErrorMessage"]
+    </span>
+    }
+   
+
 
 
 @if (!Model.StudyTopics.Any())
@@ -72,27 +85,26 @@ else
                         <div class="mb-3 document-container">
                             <h3 class="text-uppercase">Documents</h3>
                             <div class="d-flex flex-column gap-2">
-                                @if (topic.Files?.Any() == true)
+                                @if (topic.StudyFiles is not null)
                                 {
-                                    foreach (var file in topic.Files)
-                                    {
+                                   
                                         <div  class="d-flex align-items-center justify-content-between  pdf-item ">
                                            <div class="d-flex flex-wrap gap-2">
                                                 <div class="pdf-icon-container rounded-2"><i class="fa-regular fa-file"></i></div>
-                                                <a href="@file.FilePath" target="_blank" class="file-info text-decoration-none">
-                                                    <span class="d-block file-name text-black fw-bold ">@file.FileName</span>
-                                                    <span class="text-black">@file.FileSize MB</span>
+                                            <a href="@topic.StudyFiles.FilePath" target="_blank" class="file-info text-decoration-none">
+                                                <span class="d-block file-name text-black fw-bold ">@topic.StudyFiles.FileName</span>
+                                                <span class="text-black">@topic.StudyFiles.FileSize MB</span>
                                                 </a>
                                            </div>
-                                            <button data-id="@file.Id"
-                                                    data-name="@file.FileName"
+                                        <button data-id="@topic.StudyFiles.Id"
+                                                data-name="@topic.StudyFiles.FileName"
                                                     data-url="@Url.Action("DeleteDoc", "StudyFile")"
                                                     onclick="openDeleteModal(this)"
                                                 type="button" class="doc-delete-btn ">
                                                 <i class="fa-solid fa-trash"></i>
                                             </button>
                                         </div>
-                                    }
+                                    
                                 }
                                 else
                                 {
@@ -127,17 +139,16 @@ else
                     </div>
 
                     <div class="d-flex justify-content-between">
-                        @if(topic.Files is not null && topic.Files.Count>=1)
+                        @if(topic.StudyFiles is not null )
                         {
-                             @foreach(var file in topic.Files)
-                            {
+                            
                                
                                 <button class="btn-quiz px-2 text-center rounded-3"
-                                    data-fileId="@file.Id"
+                                    data-fileId="@topic.StudyFiles.Id"
                                     data-topicId ="@topic.StudyTopicId"
                                     onclick="openQuizModal(this)"
                                 ><i class="fa-solid fa-circle-question me-2"></i>Quiz Me</button>
-                            }
+                            
                         }
                         else
                         {
@@ -289,7 +300,12 @@ else
                     window.location.href = url;
                 }
             });
-
+            
+            setTimeout(
+                () => {
+                    $(".user-awareness").text("")
+                }
+                ,3000)
             
         })
     </script>

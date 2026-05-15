@@ -121,31 +121,30 @@
 		<div>
 			<h3 class="text-capitalize fs-5 fw-bold"><i class="fa-solid fa-file me-2"></i>Study documents</h3>
 			<div class="d-flex flex-wrap gap-3">
-				@if (Model.Files?.Any() == true)
+				@if (Model.StudyFiles is not null)
 				{
-					foreach (var file in Model.Files)
-					{
+					
 						<div class="d-flex align-items-center justify-content-between  pdf-item  ">
 							<div class="d-flex flex-column gap-2">
 								<div class="pdf-icon-container rounded-2"><i class="fa-solid fa-file"></i></div>
-								<a href="@file.FilePath" target="_blank" class="file-info text-decoration-none">
-									<span class="d-block file-name text-black fw-bold ">@file.FileName</span>
-									<span>@file.FileType</span>
+							<a href="@Model.StudyFiles.FilePath" target="_blank" class="file-info text-decoration-none">
+								<span class="d-block file-name text-black fw-bold ">@Model.StudyFiles.FileName</span>
+								<span>@Model.StudyFiles.FileType</span>
 									
 								</a>
 							</div>
 							<div class="d-flex flex-column gap-2">
-								<button data-id="@file.Id"
-										data-name="@file.FileName"
+							<button data-id="@Model.StudyFiles.Id"
+									data-name="@Model.StudyFiles.FileName"
 										data-url="@Url.Action("DeleteDoc", "StudyFile")"
 										onclick="openDeleteModal(this)"
 										type="button" class="doc-delete-btn ">
 									<i class="fa-solid fa-trash"></i>
 								</button>
-								<span class="text-black">@file.FileSize MB</span>
+							<span class="text-black">@Model.StudyFiles.FileSize MB</span>
 							</div>
 						</div>
-					}
+					
 				}
 				else
 				{

@@ -39,8 +39,14 @@ builder.Services.AddScoped<IGeminiService, GeminiService>();
 builder.Services.AddScoped<EmailTemplate>();
 builder.Services.Configure<FormOptions>(options =>
 {
-    options.MultipartBodyLengthLimit = 50 * 1024 * 1024; // 35MB
+    options.MultipartBodyLengthLimit = 52428800; // 35MB
 });
+
+builder.Services.Configure<IISServerOptions>(options =>
+{
+    options.MaxRequestBodySize = 524288000;
+});
+
 builder.Services.AddHangfire(config=>config.UsePostgreSqlStorage(c=>c.UseNpgsqlConnection(connectionString)));
 builder.Services.AddHangfireServer();
 

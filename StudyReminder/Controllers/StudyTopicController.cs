@@ -20,6 +20,7 @@ namespace StudyReminder.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IGeminiService _geminiService;
         private readonly ICloudinaryService _cloudinaryService;
+        public int fileSizeLimit = 5 * 1024 * 1024;
 
 
         public StudyTopicController(IStudyTopicRepository studyTopicRepository, IWebHostEnvironment webHostEnvironment, UserManager<IdentityUser> userManager, IStudyFileRepository studyFileRepository, IGeminiService geminiService, ICloudinaryService cloudinaryService)
@@ -41,15 +42,16 @@ namespace StudyReminder.Controllers
         {
             return View();
         }
-
+        [RequestSizeLimit(524288000)]
+        [RequestFormLimits(MultipartBodyLengthLimit = 524288000)]
         [HttpPost]
-        public async Task<IActionResult> Add(StudyTopicAddViewModel studyTopicAddViewModel, List<IFormFile> Files)
+        public async Task<IActionResult> Add(StudyTopicAddViewModel studyTopicAddViewModel, List<IFormFile> StudyFiles)
         {
             try
             {
                 if(ModelState.IsValid)
                 {
-                    studyTopicAddViewModel.StudyTopic.Files = new List<StudyFile>(); //creating a new list to store studyFile objects- Files in studyTopic is an ICollection anyway
+                    
                  
                     var allowedMimeTypes= new Dictionary<string, string>
                     {
@@ -57,21 +59,25 @@ namespace StudyReminder.Controllers
                         { "docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document" },
                         { "txt", "text/plain" }
                     };
-
-                    foreach (var file in Files) 
+                    if(StudyFiles.Count > 1)
                     {
-                        if (file.Length > 0) //check if the file in the files coming from modelbinding are greater than 0 in length
-                        {
-                            if(file.Length > 5 * 1024 * 1024)
+                        ModelState.AddModelError("StudyTopic.StudyFiles","Only one file can be uploaded per study topic.");
+                        return View();
+                    }
+
+                    foreach (var file in StudyFiles) 
+                    {
+                        
+                            if(file.Length > fileSizeLimit)
                             {
-                                ModelState.AddModelError("StudyTopic.Files", "Attachment size limit exceeded. Maximum upload size is 5MB");
+                                ModelState.AddModelError("StudyTopic.StudyFiles", "Attachment size limit exceeded. Maximum upload size is 5MB");
                                 return View();
                             }
                             var fileExtension = DocumentHelper.GetExtension(file.FileName);
                             var mimetype = file.ContentType.ToLower();
                             if (!allowedMimeTypes.ContainsKey(fileExtension)) // check if the file extension of the file provided is allowed or not, this is important for quizzes, so block kids immediately from uploading those types of files
                             {
-                                ModelState.AddModelError("StudyTopic.Files", "This file type is not supported yet.We only support (txt, pdf, docx)");
+                                ModelState.AddModelError("StudyTopic.StudyFiles", "This file type is not supported yet.We only support (txt, pdf, docx)");
                                 return View();
                             }
 
@@ -81,21 +87,21 @@ namespace StudyReminder.Controllers
 
                             if (!pdfFileCheck && !wordFileCheck && !textFileCheck)
                             {
-                                ModelState.AddModelError("StudyTopic.Files", "This file type is not supported yet. We only support (txt, pdf, docx)");
+                                ModelState.AddModelError("StudyTopic.StudyFiles", "This file type is not supported yet. We only support (txt, pdf, docx)");
                                 return View();
                             }
 
                           
                             var uploadedFileDetails = await _cloudinaryService.SaveUserNotes(file);
-                            studyTopicAddViewModel.StudyTopic.Files.Add(new StudyFile
-                            {
-                                FileName = file.FileName,
-                                FilePath = uploadedFileDetails.Item1,
-                                PublicId =uploadedFileDetails.Item2,
-                                FileSize =Math.Round(file.Length / (1024.0 * 1024.0), 2),
-                                FileType = DocumentHelper.GetFileType(file.FileName)
-                            });
-                        }
+                        studyTopicAddViewModel.StudyTopic.StudyFiles = new StudyFile
+                        {
+                            FileName = file.FileName,
+                            FilePath = uploadedFileDetails.Item1,
+                            PublicId = uploadedFileDetails.Item2,
+                            FileSize = Math.Round(file.Length / (1024.0 * 1024.0), 2),
+                            FileType = DocumentHelper.GetFileType(file.FileName)
+                        };
+                        
 
                     }
 
@@ -123,13 +129,13 @@ namespace StudyReminder.Controllers
                             Description = studyTopicAddViewModel.StudyTopic.Description,
                             DateStarted = studyTopicAddViewModel.StudyTopic.DateStarted,
                             Revisions = revisions,
-                            Files = studyTopicAddViewModel.StudyTopic.Files,
+                            StudyFiles = studyTopicAddViewModel.StudyTopic.StudyFiles,
                             OwnerId = _userManager.GetUserId(User)
 
                         };
 
                         await _studyTopicRepository.AddStudyTopic(topic);
-                        TempData["AddTopicSuccess"] = "New Study Topic Successfully Added";
+                        TempData["Success"] = "New Study Topic Successfully Added";
                         return RedirectToAction("Index", "Home");
 
                     }
@@ -146,33 +152,26 @@ namespace StudyReminder.Controllers
                             Description = studyTopicAddViewModel.StudyTopic.Description,
                             DateStarted = studyTopicAddViewModel.StudyTopic.DateStarted,
                             Revisions = revisions,
-                            Files = studyTopicAddViewModel.StudyTopic.Files,
+                            StudyFiles = studyTopicAddViewModel.StudyTopic.StudyFiles,
                             OwnerId = _userManager.GetUserId(User)
                         };
                         await _studyTopicRepository.AddStudyTopic(topic);
 
-                        TempData["AddTopicSuccess"] = "New Study Topic Successfully Added";
+                        TempData["Success"] = "New Study Topic Successfully Added";
                         return RedirectToAction("Index", "Home");
                     }
                 }
-                else
-                {
-                    return View();
-                }
+           
             }
             catch(Exception ex)
             {
-                ModelState.AddModelError("", $"Error addding the study topic, please try again! Error: {ex.Message}");
+                ModelState.AddModelError("StudyTopic", $"Error addding the study topic, please try again! Error: {ex.Message}");
             }
             return View();
 
         }
 
-        public async Task<IActionResult> Delete(int id)
-        {
-            var selectedTopic = await _studyTopicRepository.GetStudyTopicByIdAsync(id);
-            return View(selectedTopic);
-        }
+       
 
         [HttpPost]
         public async Task<IActionResult> Delete(int? id)
@@ -181,39 +180,49 @@ namespace StudyReminder.Controllers
             {
                 if (id != null)
                 {
+                    var topictoDelete = await _studyTopicRepository.GetStudyTopicByIdAsync(id.Value);
+
+                    if (topictoDelete.StudyFiles is not null) {
+                            await _cloudinaryService.DeleteUserNote(topictoDelete.StudyFiles.PublicId);     
+                    }
+                
                     await _studyTopicRepository.DeleteTopicAsync(id.Value);
-                    TempData["DeleteSuccess"] = "Deleted Topic Successfully";
+
+                    TempData["Success"] = "Deleted Topic Successfully";
                     return RedirectToAction("Index", "Home");
                 }
                 else
                 {
                     ViewData["ErrorMessage"] = "Invalid Id, unable to delete, please try again!";
-                    return View();
+                    return RedirectToAction("Index", "Home");
                 }
 
             }catch(Exception ex)
             {
                 ViewData["ErrorMessage"] = $"Error deleting, please try again! Error: {ex.Message}";
+               
             }
-            var selectedTopic = await _studyTopicRepository.GetStudyTopicByIdAsync(id.Value);
-            return View(selectedTopic);
+            return RedirectToAction("Index", "Home");
         }
         public async Task<IActionResult> Edit(int id)
         {
             var selectedTopic = await _studyTopicRepository.GetStudyTopicByIdAsync(id);
             return View(selectedTopic);
         }
-
+        [RequestSizeLimit(524288000)]
+        [RequestFormLimits(MultipartBodyLengthLimit = 524288000)]
         [HttpPost]
-        public async Task<IActionResult> Edit(StudyTopic studyTopic, List<IFormFile> Files)
+        public async Task<IActionResult> Edit(StudyTopic studyTopic, List<IFormFile> StudyFiles)
         {
             try
             {
                 if(ModelState.IsValid)    
                 {
-                    
-                    studyTopic.Files = new List<StudyFile>(); //creating a new list to store studyFile objects- Files in studyTopic is an ICollection anyway
-                   
+                    if (StudyFiles.Count > 1)
+                    {
+                        ModelState.AddModelError("StudyFiles", "Only one file can be uploaded per study topic.");
+                        return View(studyTopic);
+                    }
 
                     var allowedMimeTypes = new Dictionary<string, string>
                     {
@@ -222,17 +231,20 @@ namespace StudyReminder.Controllers
                         { "txt", "text/plain" }
                     };
 
-
-                    foreach (var file in Files)
+                    foreach (var file in StudyFiles)
                     {
-                     
-                        if (file.Length > 0) //this is to check if the literal size of the file is above 0bytes 
+
+                        if (file.Length > fileSizeLimit)
                         {
-                            var fileExtension = DocumentHelper.GetExtension(file.FileName);
+                            ModelState.AddModelError("StudyFiles", "Attachment size limit exceeded. Maximum upload size is 5MB");
+                            return View(studyTopic);
+                        }
+
+                        var fileExtension = DocumentHelper.GetExtension(file.FileName);
                        
                             if (!allowedMimeTypes.ContainsKey(fileExtension)) // check if the file extension of the file provided is allowed or not, this is important for quizzes, so block kids immediately from uploading those types of files
                             {
-                                ModelState.AddModelError("Files", "This file type is not supported yet. We only support (txt, pdf, docx)");
+                                ModelState.AddModelError("StudyFiles", "This file type is not supported yet. We only support (txt, pdf, docx)");
                                 return View(studyTopic);
                             }
 
@@ -242,22 +254,21 @@ namespace StudyReminder.Controllers
                          
                             if(!pdfFileCheck && !wordFileCheck && !textFileCheck)
                             {
-                                ModelState.AddModelError("Files", "This file type is not supported yet. We only support (txt, pdf, docx)");
+                                ModelState.AddModelError("StudyFiles", "This file type is not supported yet. We only support (txt, pdf, docx)");
                                 return View(studyTopic);
                             }
 
-
                             var uploadedFileDetails = await _cloudinaryService.SaveUserNotes(file);
 
-                            studyTopic.Files.Add(new StudyFile
-                            {
-                                FileName = file.FileName,
-                                FilePath = uploadedFileDetails.Item1,
-                                PublicId = uploadedFileDetails.Item2,
-                                FileSize = Math.Round(file.Length / (1024.0 * 1024.0), 2),
-                                FileType = DocumentHelper.GetFileType(file.FileName)
-                            });
-                        }
+                        studyTopic.StudyFiles =new StudyFile
+                        {
+                            FileName = file.FileName,
+                            FilePath = uploadedFileDetails.Item1,
+                            PublicId = uploadedFileDetails.Item2,
+                            FileSize = Math.Round(file.Length / (1024.0 * 1024.0), 2),
+                            FileType = DocumentHelper.GetFileType(file.FileName)
+                        };
+                        
                     }
 
                     if (studyTopic.DueDate.HasValue)
@@ -276,6 +287,7 @@ namespace StudyReminder.Controllers
                         studyTopic.Revisions = revisions;
                       
                         await _studyTopicRepository.UpdateTopicAsync(studyTopic);
+                        TempData["Success"] = "Updated  topic successfully";
                         return RedirectToAction("Index", "Home");
                     } 
 
@@ -287,17 +299,12 @@ namespace StudyReminder.Controllers
                       
 
                         await _studyTopicRepository.UpdateTopicAsync(studyTopic);
+                        TempData["Success"] = "Updated  topic successfully";
                         return RedirectToAction("Index", "Home");
                     }
                 }
 
-                else
-                {
-                    ModelState.AddModelError("Description", "Please describe what you studied and try again");
-                   
-                    return View(studyTopic);
-                }
-
+              
 
             }
             catch (Exception ex)

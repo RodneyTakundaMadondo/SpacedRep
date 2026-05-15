@@ -41,8 +41,8 @@
 
 				<div class="mb-3 d-flex flex-column">
 					<label for="">Notes:</label>
-					<input type="file" name="Files" multiple accept=".pdf,.docx,.txt" />
-					<span asp-validation-for="StudyTopic.Files" class="text-danger"></span>
+					<input type="file" name="StudyFiles" multiple accept=".pdf,.docx,.txt" />
+					<span asp-validation-for="StudyTopic.StudyFiles" class="text-danger"></span>
 				</div>
 
 				<div class="d-flex flex-column flex-sm-row justify-content-sm-between gap-3">
@@ -66,7 +66,12 @@
 		theme: 'snow'
 		});
 		document.querySelector('.form').addEventListener('submit', function () {
-			document.getElementById('hiddenContent').value =JSON.stringify(quill.getContents());
+			var text = quill.getText().trim();
+			if (text.length === 0) {
+				document.querySelector("#hiddenContent").value = "";
+			} else {
+				document.querySelector("#hiddenContent").value = JSON.stringify(quill.getContents());
+			}
 		});
 	</script>
 }

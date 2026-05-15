@@ -5,5 +5,6 @@
         Task<int> DeleteFile(int? id);
         Task<string> GetFilePath(int? id);
         Task<StudyFile> GetStudyFileById(int id);
+        Task<int> DeleteAssociatedFiles(int studyTopicId);
     }
 }

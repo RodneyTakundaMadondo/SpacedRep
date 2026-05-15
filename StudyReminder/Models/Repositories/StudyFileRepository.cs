@@ -14,6 +14,21 @@ namespace StudyReminder.Models.Repositories
             _webHostEnvironment = webHostEnvironment;
         }
 
+        public async Task<int> DeleteAssociatedFiles(int studyTopicId)
+        {
+            //var towardDeletion = await _context.StudyTopics.SingleAsync(t => t.StudyTopicId == studyTopicId);
+            //if(towardDeletion!= null && towardDeletion?.Files?.Count != 0)
+            //{
+            //    await _context.Files.Where(f => f.StudyTopicId == studyTopicId).ExecuteDeleteAsync();
+            //}
+            //else
+            //{
+            //    throw new Exception("Error deleting associated study files, please refresh and try again!");
+            //}
+            //return await _context.SaveChangesAsync();
+            throw new NotImplementedException();
+        }
+
         public async Task<int> DeleteFile(int? id)
         {
             var fileToDelete = await _context.Files.FirstOrDefaultAsync(f=>f.Id == id.Value);

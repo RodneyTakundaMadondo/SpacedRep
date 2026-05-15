@@ -303,7 +303,8 @@ namespace StudyReminder.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StudyTopicId");
+                    b.HasIndex("StudyTopicId")
+                        .IsUnique();
 
                     b.ToTable("Files");
                 });
@@ -416,8 +417,8 @@ namespace StudyReminder.Migrations
             modelBuilder.Entity("StudyReminder.Models.StudyFile", b =>
                 {
                     b.HasOne("StudyReminder.Models.StudyTopic", "StudyTopic")
-                        .WithMany("Files")
-                        .HasForeignKey("StudyTopicId")
+                        .WithOne("StudyFiles")
+                        .HasForeignKey("StudyReminder.Models.StudyFile", "StudyTopicId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -426,9 +427,9 @@ namespace StudyReminder.Migrations
 
             modelBuilder.Entity("StudyReminder.Models.StudyTopic", b =>
                 {
-                    b.Navigation("Files");
-
                     b.Navigation("Revisions");
+
+                    b.Navigation("StudyFiles");
                 });
 #pragma warning restore 612, 618
         }

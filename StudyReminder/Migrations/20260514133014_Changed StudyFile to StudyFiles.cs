@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace StudyReminder.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class ChangedStudyFiletoStudyFiles : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -280,7 +280,8 @@ namespace StudyReminder.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Files_StudyTopicId",
                 table: "Files",
-                column: "StudyTopicId");
+                column: "StudyTopicId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Quizzes_StudyTopicId",

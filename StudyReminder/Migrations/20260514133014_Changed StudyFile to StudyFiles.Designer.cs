@@ -12,8 +12,8 @@ using StudyReminder.Models;
 namespace StudyReminder.Migrations
 {
     [DbContext(typeof(SpacedRepDbContext))]
-    [Migration("20260507141921_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260514133014_Changed StudyFile to StudyFiles")]
+    partial class ChangedStudyFiletoStudyFiles
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -306,7 +306,8 @@ namespace StudyReminder.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StudyTopicId");
+                    b.HasIndex("StudyTopicId")
+                        .IsUnique();
 
                     b.ToTable("Files");
                 });
@@ -419,8 +420,8 @@ namespace StudyReminder.Migrations
             modelBuilder.Entity("StudyReminder.Models.StudyFile", b =>
                 {
                     b.HasOne("StudyReminder.Models.StudyTopic", "StudyTopic")
-                        .WithMany("Files")
-                        .HasForeignKey("StudyTopicId")
+                        .WithOne("StudyFiles")
+                        .HasForeignKey("StudyReminder.Models.StudyFile", "StudyTopicId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -429,9 +430,9 @@ namespace StudyReminder.Migrations
 
             modelBuilder.Entity("StudyReminder.Models.StudyTopic", b =>
                 {
-                    b.Navigation("Files");
-
                     b.Navigation("Revisions");
+
+                    b.Navigation("StudyFiles");
                 });
 #pragma warning restore 612, 618
         }

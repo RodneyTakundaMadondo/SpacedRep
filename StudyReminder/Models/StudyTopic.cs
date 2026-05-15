@@ -26,7 +26,7 @@ namespace StudyReminder.Models
         [DataType(DataType.Date)]
         public DateTime? DueDate { get; set; }
         public ICollection<Revision>? Revisions { get; set; } = new List<Revision>();
-        public ICollection<StudyFile>? Files { get; set; } = new List<StudyFile>();
+        public StudyFile? StudyFiles { get; set; }
         public string? OwnerId { get; set; }
 
     }

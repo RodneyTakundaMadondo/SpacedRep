@@ -35,7 +35,7 @@ namespace StudyReminder.Models.Repositories
 
         public async Task<IEnumerable<StudyTopic>> GetAllStudyTopicsAsync(string userId)
         {
-            return await _context.StudyTopics.Include(st=>st.Revisions).Include(st=>st.Files).Where(st=>st.OwnerId == userId).OrderBy(st => st.StudyTopicId).ToListAsync();
+            return await _context.StudyTopics.Include(st=>st.Revisions).Include(st=>st.StudyFiles).Where(st=>st.OwnerId == userId).OrderBy(st => st.StudyTopicId).ToListAsync();
         }
 
         public async Task<IEnumerable<Revision>> GetRevisionsDueToday(DateTime today)
@@ -46,7 +46,7 @@ namespace StudyReminder.Models.Repositories
 
         public async Task<StudyTopic> GetStudyTopicByIdAsync(int id)
         {
-            var selectedTopic =  await _context.StudyTopics.Include(st=>st.Revisions).Include(st=>st.Files).FirstOrDefaultAsync(st => st.StudyTopicId == id);
+            var selectedTopic =  await _context.StudyTopics.Include(st=>st.Revisions).Include(st=>st.StudyFiles).FirstOrDefaultAsync(st => st.StudyTopicId == id);
             if (selectedTopic != null)
             {
                 return selectedTopic;
@@ -71,7 +71,7 @@ namespace StudyReminder.Models.Repositories
                 {
                     topicToUpdate.Revisions.Add(rev);
                 }
-                topicToUpdate.Files = studyTopic.Files;
+                topicToUpdate.StudyFiles = studyTopic.StudyFiles;
                 _context.StudyTopics.Update(topicToUpdate);
                 return await _context.SaveChangesAsync();
             }
