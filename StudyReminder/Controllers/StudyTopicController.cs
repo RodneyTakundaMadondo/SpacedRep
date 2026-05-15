@@ -295,6 +295,7 @@ namespace StudyReminder.Controllers
                         var revisionDays = new[] { 1, 2, 4, 7, 14, 30 };
                                          
                         var revisions = revisionDays.Select((offset, index) => new Revision { ScheduledDate = studyTopic.DateStarted.Value.AddDays(offset), RevisionNumber = index + 1 }).ToList();
+
                         studyTopic.Revisions = revisions;
                       
 
