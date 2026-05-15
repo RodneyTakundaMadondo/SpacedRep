@@ -123,11 +123,9 @@ else
                         <li class="d-flex revision-item justify-content-between  @(revday.ScheduledDate.Date <= DateTime.Today.Date ? "completed-revision text-success" : "")">
                             
                                         <div class="d-flex align-items-center gap-2">
-                                @Html.Raw(revday.ScheduledDate.Date <= DateTime.Today
-                                                                ? "<i class='fa-solid fa-circle-check'></i>"
-                                                                : "")
-                                <span>Day @revday.RevisionNumber</span>
-                                            </div>
+                                            @Html.Raw(revday.ScheduledDate.Date <= DateTime.Today? "<i class='fa-solid fa-circle-check'></i>": "")
+                                             <span>Day @revday.RevisionNumber</span>
+                                          </div>
                                         <span class="revision-date">@revday.ScheduledDate.ToString("yyyy/MM/dd")</span>
                                     </li>
                                     i++;

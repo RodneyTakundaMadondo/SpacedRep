@@ -35,7 +35,7 @@ namespace StudyReminder.Models.Repositories
 
         public async Task<IEnumerable<StudyTopic>> GetAllStudyTopicsAsync(string userId)
         {
-            return await _context.StudyTopics.Include(st=>st.Revisions).Include(st=>st.StudyFiles).Where(st=>st.OwnerId == userId).OrderBy(st => st.StudyTopicId).ToListAsync();
+            return await _context.StudyTopics.Include(st=>st.Revisions!.OrderBy(rev=>rev.RevisionNumber)).Include(st=>st.StudyFiles).Where(st=>st.OwnerId == userId).OrderBy(st => st.StudyTopicId).ToListAsync();
         }
 
         public async Task<IEnumerable<Revision>> GetRevisionsDueToday(DateTime today)
